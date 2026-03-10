@@ -7,7 +7,12 @@ require("dotenv").config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -26,6 +31,9 @@ const UserSchema = new mongoose.Schema({
 const SettingsSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   dailyReminders: { type: Boolean, default: false },
+  notificationHour: { type: Number, default: 9 },
+  notificationMinute: { type: Number, default: 0 },
+  pushToken: { type: String },
   theme: { type: String, default: "light" },
   updatedAt: { type: Date, default: Date.now }
 });
@@ -39,7 +47,7 @@ const MoodEntrySchema = new mongoose.Schema({
   energyLevel: Number,
   activities: [String],
   gratitude: String,
-  moodInsight: String, // Store the mood insight message
+  moodInsight: String,
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -63,6 +71,10 @@ const authenticateToken = (req, res, next) => {
     res.status(403).json({ error: "Invalid token." });
   }
 };
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "Server is running" });
+});
 
 app.post("/api/auth/register", async (req, res) => {
   try {
@@ -187,6 +199,8 @@ app.post("/api/auth/google", async (req, res) => {
       const settings = new Settings({
         userId: user._id.toString(),
         dailyReminders: false,
+        notificationHour: 9,
+        notificationMinute: 0,
         theme: "light"
       });
       await settings.save();
@@ -246,6 +260,8 @@ app.get("/api/settings", authenticateToken, async (req, res) => {
       settings = new Settings({
         userId: req.user.userId,
         dailyReminders: false,
+        notificationHour: 9,
+        notificationMinute: 0,
         theme: "light"
       });
       await settings.save();
@@ -257,38 +273,75 @@ app.get("/api/settings", authenticateToken, async (req, res) => {
   }
 });
 
-app.put("/api/settings", authenticateToken, async (req, res) => {
+app.post("/api/push/register", authenticateToken, async (req, res) => {
   try {
-    let settings = await Settings.findOne({ userId: req.user.userId });
+    const { pushToken } = req.body;
+    const userId = req.user.userId;
+
+    if (!pushToken) {
+      return res.status(400).json({ error: "Push token is required" });
+    }
+
+    let settings = await Settings.findOne({ userId });
     if (!settings) {
-      settings = new Settings({
-        userId: req.user.userId,
-        ...req.body
-      });
+      settings = new Settings({ userId, pushToken });
     } else {
-      Object.assign(settings, req.body);
-      settings.updatedAt = new Date();
+      settings.pushToken = pushToken;
     }
     await settings.save();
-    res.json(settings);
+
+    res.json({ message: "Push token registered successfully" });
   } catch (error) {
-    console.error("Update settings error:", error);
+    console.error("Push token registration error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/push/send", authenticateToken, async (req, res) => {
+  try {
+    const { title, body, data } = req.body;
+    const userId = req.user.userId;
+
+    const settings = await Settings.findOne({ userId });
+    if (!settings || !settings.pushToken) {
+      return res.status(400).json({ error: "Push token not registered" });
+    }
+
+    const message = {
+      to: settings.pushToken,
+      sound: "default",
+      title: title || "MoodMate Reminder",
+      body: body || "Time to check in with your mood! How are you feeling today?",
+      data: data || {},
+    };
+
+    const response = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-Encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+
+    const result = await response.json();
+    res.json({ success: true, result });
+  } catch (error) {
+    console.error("Push notification error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
 async function analyzeMood(text) {
   try {
-    // Simple keyword-based fallback for common mood words
     const lowerText = text.toLowerCase();
     const positiveWords = ['happy', 'joy', 'excited', 'great', 'wonderful', 'amazing', 'love', 'good', 'fantastic', 'excellent', 'awesome', 'glad', 'pleased', 'delighted', 'cheerful', 'content', 'grateful', 'blessed', 'lucky', 'smile', 'laugh'];
     const negativeWords = ['sad', 'angry', 'mad', 'frustrated', 'anxious', 'worried', 'stressed', 'depressed', 'upset', 'disappointed', 'hurt', 'lonely', 'tired', 'exhausted', 'hate', 'terrible', 'awful', 'horrible', 'bad', 'cry', 'fear'];
     
-    // Check for positive words
     const hasPositive = positiveWords.some(word => lowerText.includes(word));
     const hasNegative = negativeWords.some(word => lowerText.includes(word));
     
-    // If clear keywords found, use them
     if (hasPositive && !hasNegative) {
       return { mood: "POSITIVE", score: 0.8 };
     }
@@ -296,9 +349,8 @@ async function analyzeMood(text) {
       return { mood: "NEGATIVE", score: 0.8 };
     }
 
-    // Try Hugging Face API
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment",
+      "https://api-inference.huggingface.co",
       {
         method: "POST",
         headers: {
@@ -311,7 +363,6 @@ async function analyzeMood(text) {
 
     if (!response.ok) {
       console.error("Hugging Face API HTTP Error:", response.status);
-      // Fallback to keyword analysis
       if (hasPositive) return { mood: "POSITIVE", score: 0.7 };
       if (hasNegative) return { mood: "NEGATIVE", score: 0.7 };
       return { mood: "NEUTRAL", score: 0.5 };
@@ -321,13 +372,11 @@ async function analyzeMood(text) {
 
     if (result.error) {
       console.error("Hugging Face API Error:", result.error);
-      // Fallback to keyword analysis
       if (hasPositive) return { mood: "POSITIVE", score: 0.7 };
       if (hasNegative) return { mood: "NEGATIVE", score: 0.7 };
       return { mood: "NEUTRAL", score: 0.5 };
     }
 
-    // Handle different response formats
     let scores;
     if (Array.isArray(result) && result[0]) {
       scores = Array.isArray(result[0]) ? result[0] : result;
@@ -337,10 +386,8 @@ async function analyzeMood(text) {
       scores = result;
     }
 
-    // Ensure scores is an array
     if (!Array.isArray(scores)) {
       console.error("Unexpected API response format:", result);
-      // Fallback to keyword analysis
       if (hasPositive) return { mood: "POSITIVE", score: 0.7 };
       if (hasNegative) return { mood: "NEGATIVE", score: 0.7 };
       return { mood: "NEUTRAL", score: 0.5 };
@@ -363,7 +410,6 @@ async function analyzeMood(text) {
     return { mood, score };
   } catch (error) {
     console.error("AI Analysis Error:", error);
-    // Fallback to keyword analysis
     const lowerText = text.toLowerCase();
     const positiveWords = ['happy', 'joy', 'excited', 'great', 'wonderful', 'amazing', 'love', 'good'];
     const negativeWords = ['sad', 'angry', 'mad', 'frustrated', 'anxious', 'worried', 'stressed', 'depressed'];
@@ -385,7 +431,6 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: "Text is required" });
     }
 
-    // Map emoji moods to sentiment classifications (case-insensitive)
     const emojiMoodMap = {
       happy: "POSITIVE",
       sad: "NEGATIVE",
@@ -394,8 +439,6 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
       neutral: "NEUTRAL"
     };
 
-    // Generate mood insight based on mood - ensures different quote each time
-    // Uses timestamp + random to guarantee uniqueness
     const getMoodInsight = (mood) => {
       const insights = {
         POSITIVE: [
@@ -424,8 +467,6 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
         ],
       };
       const moodInsights = insights[mood] || insights.NEUTRAL;
-      // Combine timestamp with random to ensure different selection each time
-      // This guarantees a different quote every single time, even for the same mood
       const timestamp = Date.now();
       const random = Math.random();
       const combinedSeed = (timestamp % 1000000) + (random * 1000);
@@ -437,17 +478,11 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
 
     let sentiment;
     
-    // If emoji mood is selected, use it to determine sentiment
-    // Otherwise, analyze the text
     if (emojiMood && emojiMoodMap[emojiMood.toLowerCase()]) {
-      // Use emoji mood classification
       const mood = emojiMoodMap[emojiMood.toLowerCase()];
-      // Still analyze text for score, but use emoji mood classification
       const textSentiment = await analyzeMood(text);
-      // Use the actual score from sentiment analysis, or a reasonable default based on mood
       let score = textSentiment.score;
       if (!score || score < 0.5) {
-        // If score is too low or missing, use a default based on mood type
         score = mood === "NEUTRAL" ? 0.5 : 0.75;
       }
       sentiment = {
@@ -455,7 +490,6 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
         score: score
       };
     } else {
-      // Analyze text normally - this will return the actual API confidence score
       sentiment = await analyzeMood(text);
     }
 
@@ -498,34 +532,28 @@ app.get("/api/mood/history", authenticateToken, async (req, res) => {
   }
 });
 
-// IMPORTANT: This route must come BEFORE /api/mood/:id to avoid route conflicts
 app.delete("/api/mood/history", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     console.log(`🗑️  Attempting to delete all mood entries for user: ${userId}`);
     console.log(`📋 User ID type: ${typeof userId}, value: ${userId}`);
     
-    // First, check how many entries exist (try both string and ObjectId format)
     const countBefore = await MoodEntry.countDocuments({ userId: userId });
     console.log(`📊 Found ${countBefore} mood entries for user ${userId}`);
     
-    // Also check if there are entries with different userId formats
     const allEntries = await MoodEntry.find({}).limit(5);
     if (allEntries.length > 0) {
       console.log(`📋 Sample entry userId format: ${typeof allEntries[0].userId}, value: ${allEntries[0].userId}`);
     }
     
-    // Delete all entries matching the userId
     const result = await MoodEntry.deleteMany({ userId: userId });
     console.log(`✅ Deleted ${result.deletedCount} mood entries for user ${userId}`);
     
-    // Verify deletion
     const countAfter = await MoodEntry.countDocuments({ userId: userId });
     console.log(`📊 Remaining entries after deletion: ${countAfter}`);
     
     if (countAfter > 0) {
       console.warn(`⚠️  Warning: ${countAfter} entries still exist after deletion attempt`);
-      // Try to find what userIds still exist
       const remainingEntries = await MoodEntry.find({ userId: userId }).limit(3);
       console.log(`📋 Remaining entry userIds:`, remainingEntries.map(e => ({ id: e._id, userId: e.userId })));
     }
@@ -543,7 +571,6 @@ app.delete("/api/mood/history", authenticateToken, async (req, res) => {
   }
 });
 
-// Delete a specific mood entry by ID (must come AFTER /api/mood/history)
 app.delete("/api/mood/:id", authenticateToken, async (req, res) => {
   try {
     const entry = await MoodEntry.findById(req.params.id);
@@ -561,26 +588,21 @@ app.delete("/api/mood/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Delete user account and all associated data
 app.delete("/api/user", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     console.log("Attempting to delete user:", userId);
     
-    // Delete all mood entries
     const moodResult = await MoodEntry.deleteMany({ userId });
     console.log(`Deleted ${moodResult.deletedCount} mood entries`);
     
-    // Delete settings
     const settingsResult = await Settings.deleteOne({ userId });
     console.log(`Deleted ${settingsResult.deletedCount} settings`);
     
-    // Delete user account - userId is already a string from JWT, convert to ObjectId if needed
     let userResult;
     if (mongoose.Types.ObjectId.isValid(userId)) {
       userResult = await User.findByIdAndDelete(userId);
     } else {
-      // If userId is not a valid ObjectId, try to find by other fields
       userResult = await User.findOneAndDelete({ 
         $or: [
           { _id: userId },
@@ -625,7 +647,159 @@ app.get("/api/mood/stats", authenticateToken, async (req, res) => {
   }
 });
 
+const sendPushNotification = async (pushToken, title, body, data = {}) => {
+  try {
+    const message = {
+      to: pushToken,
+      sound: "default",
+      title: title || "MoodMate Reminder",
+      body: body || "Time to check in with your mood! How are you feeling today?",
+      data: data || {},
+    };
+
+    const response = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-Encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Push notification error:", error);
+    return null;
+  }
+};
+
+const notificationTimers = new Map();
+
+const getTimeUntilNextNotification = (hour, minute) => {
+  const now = new Date();
+  const target = new Date();
+  target.setHours(hour, minute, 0, 0);
+  target.setSeconds(0, 0);
+  target.setMilliseconds(0);
+  
+  const msUntil = target.getTime() - now.getTime();
+  if (target <= now || msUntil < 600000) {
+    target.setDate(target.getDate() + 1);
+  }
+  
+  const finalMsUntil = target.getTime() - new Date().getTime();
+  
+  return Math.max(finalMsUntil, 600000);
+};
+
+const scheduleNotificationForUser = async (userId, settings) => {
+  if (!settings.dailyReminders || !settings.pushToken) {
+    if (notificationTimers.has(userId)) {
+      clearTimeout(notificationTimers.get(userId));
+      notificationTimers.delete(userId);
+    }
+    return;
+  }
+
+  if (notificationTimers.has(userId)) {
+    clearTimeout(notificationTimers.get(userId));
+  }
+
+  const hour = settings.notificationHour || 9;
+  const minute = settings.notificationMinute || 0;
+  
+  const scheduleNext = async () => {
+    try {
+      const currentSettings = await Settings.findOne({ userId });
+      if (!currentSettings || !currentSettings.dailyReminders || !currentSettings.pushToken) {
+        notificationTimers.delete(userId);
+        return;
+      }
+
+      await sendPushNotification(
+        currentSettings.pushToken,
+        "MoodMate Reminder",
+        "Time to check in with your mood! How are you feeling today?"
+      );
+
+      const msUntilNext = getTimeUntilNextNotification(
+        currentSettings.notificationHour || 9,
+        currentSettings.notificationMinute || 0
+      );
+      
+      const timer = setTimeout(scheduleNext, msUntilNext);
+      notificationTimers.set(userId, timer);
+      console.log(`✅ Scheduled next notification for user ${userId} at ${hour}:${minute.toString().padStart(2, '0')}`);
+    } catch (error) {
+      console.error(`Error sending notification to user ${userId}:`, error);
+      notificationTimers.delete(userId);
+    }
+  };
+
+  const msUntilFirst = getTimeUntilNextNotification(hour, minute);
+  
+  if (msUntilFirst >= 300000) {
+    const timer = setTimeout(scheduleNext, msUntilFirst);
+    notificationTimers.set(userId, timer);
+    console.log(`✅ Scheduled daily notification for user ${userId} at ${hour}:${minute.toString().padStart(2, '0')} (in ${Math.floor(msUntilFirst / 60000)} minutes)`);
+  } else {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(hour, minute, 0, 0);
+    tomorrow.setSeconds(0, 0);
+    const msUntilTomorrow = tomorrow.getTime() - new Date().getTime();
+    const timer = setTimeout(scheduleNext, msUntilTomorrow);
+    notificationTimers.set(userId, timer);
+    console.log(`✅ Scheduled daily notification for user ${userId} at ${hour}:${minute.toString().padStart(2, '0')} (tomorrow, in ${Math.floor(msUntilTomorrow / 60000)} minutes)`);
+  }
+};
+
+app.put("/api/settings", authenticateToken, async (req, res) => {
+  try {
+    let settings = await Settings.findOne({ userId: req.user.userId });
+    if (!settings) {
+      settings = new Settings({
+        userId: req.user.userId,
+        ...req.body
+      });
+    } else {
+      Object.assign(settings, req.body);
+      settings.updatedAt = new Date();
+    }
+    await settings.save();
+    
+    if (settings.dailyReminders && req.body.dailyReminders === true) {
+      if (settings.pushToken) {
+        await scheduleNotificationForUser(req.user.userId, settings);
+      } else {
+        console.log(`⚠️ User ${req.user.userId} enabled notifications but no push token. Notifications will work locally on device.`);
+      }
+    } else if (!settings.dailyReminders) {
+      if (notificationTimers.has(req.user.userId)) {
+        clearTimeout(notificationTimers.get(req.user.userId));
+        notificationTimers.delete(req.user.userId);
+      }
+    }
+    
+    res.json(settings);
+  } catch (error) {
+    console.error("Update settings error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+const HOST = process.env.HOST || "0.0.0.0";
+
+app.listen(PORT, HOST, async () => {
+  console.log(`🚀 Server running on http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${PORT}`);
+  console.log(`📱 For mobile access, use your computer's IP address or set up ngrok/tunnel`);
+  
+  const allSettings = await Settings.find({ dailyReminders: true, pushToken: { $exists: true, $ne: null } });
+  for (const settings of allSettings) {
+    await scheduleNotificationForUser(settings.userId, settings);
+  }
+  console.log(`✅ Loaded ${allSettings.length} notification schedules`);
 });
