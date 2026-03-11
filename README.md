@@ -154,7 +154,7 @@ The following features were added proactively by our group to ensure the best po
 > "Apologies this is being all done, even though it wasn't explicitly mentioned in the certain assessments (i.e. revised project proposal, and so on), but our group wanted to add all of these features, so that it can helpful for all of the users anytime, and all the time, as well. ALL 100%!!!"
 
 ### Specific Features Added:
-- **Login Page (`login.js`):** Added the **"Forgot Credentials"** section for total failsafe access, ALL 100%!!!
+- **Login Page (`login.js`):** Just added the **"Forgot Credentials"** section (supporting users who need to Sign Up for another account again) for total failsafe access, ALL 100%!!!
 - **Dashboard (`index.js`):** Standardized **header title sizes and greeting font sizes** for a calmer aesthetic, ALL 100%!!!
 - **History Screen (`history.js`):** Wrapped the empty state in a **clean white card container** (matching Trends consistency), ALL 100%!!!
 - **Trends Screen (`trends.js`):** Fixed the **double "No data" message bug** and standardized the header layout for 100% visual alignment, ALL 100%!!!
