@@ -83,7 +83,13 @@ app.get("/api/health", (req, res) => {
 
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const { username, email, password, name } = req.body;
+    let { username, email, password, name } = req.body;
+
+    // 100% Professional Backend Data Sanitization!!!
+    if (email) email = email.trim().toLowerCase();
+    if (username) username = username.trim().toLowerCase();
+    if (password) password = password.trim();
+    if (name) name = name.trim();
 
     if (!email || !password || !name || !username) {
       return res.status(400).json({ error: "All fields (Email, Password, Name, Username) are 100% required" });
@@ -158,7 +164,11 @@ app.post("/api/auth/register", async (req, res) => {
 
 app.post("/api/auth/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    // 100% Professional Backend Data Sanitization!!!
+    if (email) email = email.trim().toLowerCase();
+    if (password) password = password.trim();
 
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are 100% required" });
