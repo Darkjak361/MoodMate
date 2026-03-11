@@ -1,10 +1,10 @@
 # MoodMate Project Documentation Final
 
-**Course Code:** CPAN-314-0NA (Project Development I)  
+**Course Code:** CPAN-324-0NA (Project Development II)  
 **Program Name:** Computer Programming and Analysis (CP311)  
 **Group Members:** Ekroop Hundal-Vatcher (N01632322), Suleman Ibrahim (N01370789)  
 **Institution:** Humber College, North Campus, 205 Humber College Blvd, Etobicoke, Ontario M9W 5L7  
-**Semester:** Fall 2025 (Semester 5), September 2025 To December 2025  
+**Semester:** Winter 2026 (Semester 6), January 2026 To April 2026  
 **Professor:** Arman Hamzehlou Kahrizi  
 **Document Type:** MoodMate Project Documentation Final
 
@@ -141,4 +141,22 @@ If you need features not supported by Expo Go or want to ship to app stores:
    - **Android:** `npx expo run:android`
    - **iOS:** `npx expo run:ios`
 3. **Start Bundler:** `npx expo start` ( Metro will detect `expo-dev-client`)
-4. **Maintenance Fix:** If you see a warning about `baseline-browser-mapping` being outdated, run: `npm i baseline-browser-mapping@latest -D` in the `frontend` folder.
+4. **Maintenance Fix:** If you see a warning about `baseline-browser-mapping` being outdated, try running: `npm i baseline-browser-mapping@latest -D` in the `frontend` folder.
+---
+
+## 8. Proactive Group Enhancements (Stakeholder Transparency)
+
+The following features were added proactively by our group to ensure the best possible user experience, even though they were not explicitly required in the initial project proposal or assessments. We believe these additions make MoodMate a truly professional and helpful tool for all users at all times.
+
+> [!NOTE]  
+> "Apologies this is being all done, even though it wasn't explicitly mentioned in the certain assessments (i.e. revised project proposal, and so on), but our group wanted to add all of these features, so that it can helpful for all of the users anytime, and all the time, as well. ALL 100%!!!"
+
+### Specific Features Added:
+- **Login Page (`login.js`):** Added the **"Forgot Credentials"** section for total failsafe access, ALL 100%!!!
+- **Dashboard (`index.js`):** Standardized **header title sizes and greeting font sizes** for a calmer aesthetic, ALL 100%!!!
+- **History Screen (`history.js`):** Wrapped the empty state in a **clean white card container** (matching Trends consistency), ALL 100%!!!
+- **Trends Screen (`trends.js`):** Fixed the **double "No data" message bug** and standardized the header layout for 100% visual alignment, ALL 100%!!!
+- **Profile Screen (`profile.js`):** Simplified **notification confirmation points** and added a clear **Delete Account button** for data sovereignty, ALL 100%!!!
+- **Logout Component (`LogoutButton.js`):** Created a **centralized cross-platform component** for a consistent and reliable logout experience, ALL 100%!!!
+
+---
