@@ -175,6 +175,13 @@ If you see an error like `CommandError: TypeError: Cannot read properties of und
 4.  **If it still fails with the same error**, run this "Deep Fix" command to 100% refresh the tunnel tool: 
     - `npm install @expo/ngrok@latest --save-dev`
 5.  It will connect perfectly after that 100% of the time!
+6.  **Advanced Infallibility Fix (macOS / Linux)**: If you need to deeply reset EVERYTHING at once, run this "Universal Kill Switch":
+    - `pkill -f expo && pkill -f ngrok && pkill -f node && lsof -ti :8081,5001 | xargs kill -9`
+7.  **Advanced Infallibility Fix (Windows)**: If you need to deeply reset EVERYTHING at once, open **Command Prompt (Admin)** and run:
+    - `taskkill /F /IM node.exe /T & taskkill /F /IM ngrok.exe /T`
+8.  **Compatibility Fix (All Platforms)**: If dependencies are mismatched after an update, run:
+    - `npx expo install --fix`
+    - Then start with a clear cache: `npx expo start --tunnel --clear`
 
 ### Handling "Port Already In Use" Errors
 If you see an error like `Port 5001 is running this app in another window` or `Port 8081 is already in use`:
@@ -186,6 +193,8 @@ If you see an error like `Port 5001 is running this app in another window` or `P
 2.  **Kill the Process**:
     - Look for the `PID` number in the output and run: `kill -9 <PID>`
     - *Example:* If the PID is 15777, run `kill -9 15777`.
+3.  **Universal "Kill All" One-Liner (macOS/Linux)**: 
+    - `pkill -f expo && pkill -f ngrok && pkill -f node && lsof -ti :8081,5001 | xargs kill -9`
 
 #### On Windows:
 1.  **Identify the Process ID (PID)**:
@@ -193,6 +202,8 @@ If you see an error like `Port 5001 is running this app in another window` or `P
     - For **Frontend** (Port 8081): Run `netstat -ano | findstr :8081`
 2.  **Kill the Process**:
     - Look for the `PID` (the last number in the row) and run: `taskkill /F /PID <PID>`
+3.  **Universal "Kill All" One-Liner (Windows Command Prompt)**:
+    - `taskkill /F /IM node.exe /T & taskkill /F /IM ngrok.exe /T`
     - *Example:* If the PID is 15777, run `taskkill /F /PID 15777`.
 
 3.  **Start Fresh**: Now you can run the start commands again and they will work 100% perfectly!
