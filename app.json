@@ -1,0 +1,8 @@
+{
+  "android": {
+    "package": "com.anonymous.project_prototype_moodmate"
+  },
+  "ios": {
+    "bundleIdentifier": "com.anonymous.project-prototype-moodmate"
+  }
+}

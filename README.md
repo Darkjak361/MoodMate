@@ -141,3 +141,4 @@ If you need features not supported by Expo Go or want to ship to app stores:
    - **Android:** `npx expo run:android`
    - **iOS:** `npx expo run:ios`
 3. **Start Bundler:** `npx expo start` ( Metro will detect `expo-dev-client`)
+4. **Maintenance Fix:** If you see a warning about `baseline-browser-mapping` being outdated, run: `npm i baseline-browser-mapping@latest -D` in the `frontend` folder.

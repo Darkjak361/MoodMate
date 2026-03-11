@@ -124,7 +124,7 @@ app.post("/api/auth/register", async (req, res) => {
     });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Internal server error",
       message: process.env.NODE_ENV === "development" ? error.message : undefined
     });
@@ -170,7 +170,7 @@ app.post("/api/auth/login", async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Internal server error",
       message: process.env.NODE_ENV === "development" ? error.message : undefined
     });
@@ -338,10 +338,10 @@ async function analyzeMood(text) {
     const lowerText = text.toLowerCase();
     const positiveWords = ['happy', 'joy', 'excited', 'great', 'wonderful', 'amazing', 'love', 'good', 'fantastic', 'excellent', 'awesome', 'glad', 'pleased', 'delighted', 'cheerful', 'content', 'grateful', 'blessed', 'lucky', 'smile', 'laugh'];
     const negativeWords = ['sad', 'angry', 'mad', 'frustrated', 'anxious', 'worried', 'stressed', 'depressed', 'upset', 'disappointed', 'hurt', 'lonely', 'tired', 'exhausted', 'hate', 'terrible', 'awful', 'horrible', 'bad', 'cry', 'fear'];
-    
+
     const hasPositive = positiveWords.some(word => lowerText.includes(word));
     const hasNegative = negativeWords.some(word => lowerText.includes(word));
-    
+
     if (hasPositive && !hasNegative) {
       return { mood: "POSITIVE", score: 0.8 };
     }
@@ -415,7 +415,7 @@ async function analyzeMood(text) {
     const negativeWords = ['sad', 'angry', 'mad', 'frustrated', 'anxious', 'worried', 'stressed', 'depressed'];
     const hasPositive = positiveWords.some(word => lowerText.includes(word));
     const hasNegative = negativeWords.some(word => lowerText.includes(word));
-    
+
     if (hasPositive) return { mood: "POSITIVE", score: 0.7 };
     if (hasNegative) return { mood: "NEGATIVE", score: 0.7 };
     return { mood: "NEUTRAL", score: 0.5 };
@@ -442,28 +442,28 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
     const getMoodInsight = (mood) => {
       const insights = {
         POSITIVE: [
-          "You're doing great today. Take a moment to appreciate this feeling.",
-          "Your positive energy is shining through! Keep up the great work.",
-          "It's wonderful to see you feeling good. Savor this moment!",
-          "You're radiating positivity today. Let it guide your day!",
-          "Your good mood is contagious! Spread that joy around.",
-          "Feeling positive? That's amazing! Remember this feeling for later.",
+          "It's wonderful to see you feeling good! Savor this energy and perhaps share a smile with someone today.",
+          "Your positive outlook is a great strength. What one small thing made you feel most grateful today?",
+          "Radiating positivity! Take a slow breath and let this feeling settle in. You've earned this moment of joy.",
+          "It's great to hear you're doing well. Keep nurturing this headspace as you move through your day.",
+          "You're in a great flow! What can you do to keep this momentum going gently?",
+          "Wonderful energy! Remember this feeling—it's a reflection of the resilience and joy within you.",
         ],
         NEUTRAL: [
-          "You're steady today. A small walk or stretch might brighten your mood.",
-          "Feeling balanced? That's perfectly okay. Sometimes neutral is just right.",
-          "You're in a calm state. Consider trying something new to add some sparkle.",
-          "Steady as you go! A little movement or music might lift your spirits.",
-          "You're feeling neutral today. That's a good foundation to build on.",
-          "Balance is beautiful. If you want a boost, try a quick activity you enjoy.",
+          "A steady day is a peaceful day. How does this quiet moment feel for you?",
+          "Balance is key. Maybe a short walk or some favorite music could add a gentle spark to your afternoon?",
+          "Feeling neutral is a great time for reflection. What's one thing you're looking forward to this week?",
+          "You're in a calm state. Sometimes, just being present is the most productive thing you can do.",
+          "Steady and centered. If you're looking for a small boost, consider a quick stretch or a glass of water.",
+          "A calm foundation is a beautiful thing. Take a moment to just be, without any pressure to feel more.",
         ],
         NEGATIVE: [
-          "It's okay to have off days. Try taking a slow breath and grounding yourself.",
-          "Tough feelings are valid. Remember, this too shall pass.",
-          "You're going through a rough patch, and that's okay. Be gentle with yourself.",
-          "Difficult emotions are part of being human. You're not alone in this.",
-          "It's okay to not be okay. Take your time and be kind to yourself.",
-          "Rough days happen. Try some deep breathing or reach out to someone you trust.",
+          "It's completely okay to not be okay. Be gentle with yourself—you're doing the best you can right now.",
+          "Tough moments are part of the journey. Take a slow, deep breath. You are stronger than this moment feels.",
+          "I'm sorry things feel heavy right now. What's one tiny thing you can do just for your own comfort today?",
+          "Your feelings are valid and important. Remember to reach out to a friend or take a quiet moment for yourself.",
+          "Heavy days happen, but they don't define your entire story. Rest if you need to; you're not alone.",
+          "If things feel overwhelming, try grounding yourself: name three things you can see right now. One step at a time.",
         ],
       };
       const moodInsights = insights[mood] || insights.NEUTRAL;
@@ -477,16 +477,23 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
     };
 
     let sentiment;
-    
+
     if (emojiMood && emojiMoodMap[emojiMood.toLowerCase()]) {
       const mood = emojiMoodMap[emojiMood.toLowerCase()];
-      const textSentiment = await analyzeMood(text);
-      let score = textSentiment.score;
-      if (!score || score < 0.5) {
-        score = mood === "NEUTRAL" ? 0.5 : 0.75;
+      const textSentiment = text.trim().length > 0 ? await analyzeMood(text) : null;
+
+      let finalMood = mood;
+      let score = textSentiment ? textSentiment.score : 0.75;
+
+      // If text exists, let it influence the mood weight
+      if (textSentiment && textSentiment.mood !== mood) {
+        // If they conflict, we lean toward the text as it represents deeper thought
+        finalMood = textSentiment.mood;
+        score = textSentiment.score;
       }
+
       sentiment = {
-        mood: mood,
+        mood: finalMood,
         score: score
       };
     } else {
@@ -537,29 +544,29 @@ app.delete("/api/mood/history", authenticateToken, async (req, res) => {
     const userId = req.user.userId;
     console.log(`🗑️  Attempting to delete all mood entries for user: ${userId}`);
     console.log(`📋 User ID type: ${typeof userId}, value: ${userId}`);
-    
+
     const countBefore = await MoodEntry.countDocuments({ userId: userId });
     console.log(`📊 Found ${countBefore} mood entries for user ${userId}`);
-    
+
     const allEntries = await MoodEntry.find({}).limit(5);
     if (allEntries.length > 0) {
       console.log(`📋 Sample entry userId format: ${typeof allEntries[0].userId}, value: ${allEntries[0].userId}`);
     }
-    
+
     const result = await MoodEntry.deleteMany({ userId: userId });
     console.log(`✅ Deleted ${result.deletedCount} mood entries for user ${userId}`);
-    
+
     const countAfter = await MoodEntry.countDocuments({ userId: userId });
     console.log(`📊 Remaining entries after deletion: ${countAfter}`);
-    
+
     if (countAfter > 0) {
       console.warn(`⚠️  Warning: ${countAfter} entries still exist after deletion attempt`);
       const remainingEntries = await MoodEntry.find({ userId: userId }).limit(3);
       console.log(`📋 Remaining entry userIds:`, remainingEntries.map(e => ({ id: e._id, userId: e.userId })));
     }
-    
-    res.json({ 
-      message: "All mood data deleted", 
+
+    res.json({
+      message: "All mood data deleted",
       deletedCount: result.deletedCount,
       countBefore,
       countAfter
@@ -592,30 +599,30 @@ app.delete("/api/user", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     console.log("Attempting to delete user:", userId);
-    
+
     const moodResult = await MoodEntry.deleteMany({ userId });
     console.log(`Deleted ${moodResult.deletedCount} mood entries`);
-    
+
     const settingsResult = await Settings.deleteOne({ userId });
     console.log(`Deleted ${settingsResult.deletedCount} settings`);
-    
+
     let userResult;
     if (mongoose.Types.ObjectId.isValid(userId)) {
       userResult = await User.findByIdAndDelete(userId);
     } else {
-      userResult = await User.findOneAndDelete({ 
+      userResult = await User.findOneAndDelete({
         $or: [
           { _id: userId },
           { email: req.user.email }
         ]
       });
     }
-    
+
     if (!userResult) {
       console.error("User not found for deletion:", userId);
       return res.status(404).json({ error: "User not found" });
     }
-    
+
     console.log(`User ${userId} and all associated data deleted successfully`);
     res.json({ message: "User account and all data deleted successfully" });
   } catch (error) {
@@ -628,7 +635,7 @@ app.delete("/api/user", authenticateToken, async (req, res) => {
 app.get("/api/mood/stats", authenticateToken, async (req, res) => {
   try {
     const entries = await MoodEntry.find({ userId: req.user.userId });
-    
+
     const stats = {
       total: entries.length,
       positive: entries.filter(e => e.mood === "POSITIVE").length,
@@ -683,14 +690,14 @@ const getTimeUntilNextNotification = (hour, minute) => {
   target.setHours(hour, minute, 0, 0);
   target.setSeconds(0, 0);
   target.setMilliseconds(0);
-  
+
   const msUntil = target.getTime() - now.getTime();
   if (target <= now || msUntil < 600000) {
     target.setDate(target.getDate() + 1);
   }
-  
+
   const finalMsUntil = target.getTime() - new Date().getTime();
-  
+
   return Math.max(finalMsUntil, 600000);
 };
 
@@ -709,7 +716,7 @@ const scheduleNotificationForUser = async (userId, settings) => {
 
   const hour = settings.notificationHour || 9;
   const minute = settings.notificationMinute || 0;
-  
+
   const scheduleNext = async () => {
     try {
       const currentSettings = await Settings.findOne({ userId });
@@ -728,7 +735,7 @@ const scheduleNotificationForUser = async (userId, settings) => {
         currentSettings.notificationHour || 9,
         currentSettings.notificationMinute || 0
       );
-      
+
       const timer = setTimeout(scheduleNext, msUntilNext);
       notificationTimers.set(userId, timer);
       console.log(`✅ Scheduled next notification for user ${userId} at ${hour}:${minute.toString().padStart(2, '0')}`);
@@ -739,7 +746,7 @@ const scheduleNotificationForUser = async (userId, settings) => {
   };
 
   const msUntilFirst = getTimeUntilNextNotification(hour, minute);
-  
+
   if (msUntilFirst >= 300000) {
     const timer = setTimeout(scheduleNext, msUntilFirst);
     notificationTimers.set(userId, timer);
@@ -769,7 +776,7 @@ app.put("/api/settings", authenticateToken, async (req, res) => {
       settings.updatedAt = new Date();
     }
     await settings.save();
-    
+
     if (settings.dailyReminders && req.body.dailyReminders === true) {
       if (settings.pushToken) {
         await scheduleNotificationForUser(req.user.userId, settings);
@@ -782,7 +789,7 @@ app.put("/api/settings", authenticateToken, async (req, res) => {
         notificationTimers.delete(req.user.userId);
       }
     }
-    
+
     res.json(settings);
   } catch (error) {
     console.error("Update settings error:", error);
@@ -791,12 +798,12 @@ app.put("/api/settings", authenticateToken, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5001;
-const HOST = process.env.HOST || "0.0.0.0";
+const HOST = "0.0.0.0";
 
 app.listen(PORT, HOST, async () => {
   console.log(`🚀 Server running on http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${PORT}`);
   console.log(`📱 For mobile access, use your computer's IP address or set up ngrok/tunnel`);
-  
+
   const allSettings = await Settings.find({ dailyReminders: true, pushToken: { $exists: true, $ne: null } });
   for (const settings of allSettings) {
     await scheduleNotificationForUser(settings.userId, settings);
