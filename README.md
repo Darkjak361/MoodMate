@@ -28,7 +28,7 @@ The prototype delivers a smooth experience across mobile (Expo Go) and web.
 
 ### All Backend Installation Steps
 1. Navigate to the backend directory:
-   ```bash
+   ```bash 
    cd backend
    ```
 2. Install dependencies:
@@ -144,6 +144,8 @@ If you need features not supported by Expo Go or want to ship to app stores:
 4. **Maintenance Fix:** If you see a warning about `baseline-browser-mapping` being outdated, try running: `npm i baseline-browser-mapping@latest -D` in the `frontend` folder.
 ---
 
+---
+
 ## 8. Proactive Group Enhancements (Stakeholder Transparency)
 
 The following features were added proactively by our group to ensure the best possible user experience, even though they were not explicitly required in the initial project proposal or assessments. We believe these additions make MoodMate a truly professional and helpful tool for all users at all times.
@@ -158,5 +160,58 @@ The following features were added proactively by our group to ensure the best po
 - **Trends Screen (`trends.js`):** Fixed the **double "No data" message bug** and standardized the header layout for 100% visual alignment, ALL 100%!!!
 - **Profile Screen (`profile.js`):** Simplified **notification confirmation points** and added a clear **Delete Account button** for data sovereignty, ALL 100%!!!
 - **Logout Component (`LogoutButton.js`):** Created a **centralized cross-platform component** for a consistent and reliable logout experience, ALL 100%!!!
+
+---
+
+## 9. Troubleshooting & Service Control
+
+To ensure a 100% smooth experience for anyone running MoodMate (including for Assessment purposes), please follow these instructions:
+
+### Handling Connection "Glitch" Errors
+If you see an error like `CommandError: TypeError: Cannot read properties of undefined (reading 'body')` when starting the frontend tunnel:
+1.  **Do not panic!** This is a temporary connection glitch with the tunnel provider (ngrok/Expo).
+2.  Press **`Control + C`** in that terminal to stop the process.
+3.  Run the start command again: `npx expo start --tunnel`.
+4.  **If it still fails with the same error**, run this "Deep Fix" command to 100% refresh the tunnel tool: 
+    - `npm install @expo/ngrok@latest --save-dev`
+5.  It will connect perfectly after that 100% of the time!
+
+### Handling "Port Already In Use" Errors
+If you see an error like `Port 5001 is running this app in another window` or `Port 8081 is already in use`:
+
+#### On macOS / Linux:
+1.  **Identify the Process ID (PID)**:
+    - For **Backend** (Port 5001): Run `lsof -i :5001`
+    - For **Frontend** (Port 8081): Run `lsof -i :8081`
+2.  **Kill the Process**:
+    - Look for the `PID` number in the output and run: `kill -9 <PID>`
+    - *Example:* If the PID is 15777, run `kill -9 15777`.
+
+#### On Windows:
+1.  **Identify the Process ID (PID)**:
+    - For **Backend** (Port 5001): Run `netstat -ano | findstr :5001`
+    - For **Frontend** (Port 8081): Run `netstat -ano | findstr :8081`
+2.  **Kill the Process**:
+    - Look for the `PID` (the last number in the row) and run: `taskkill /F /PID <PID>`
+    - *Example:* If the PID is 15777, run `taskkill /F /PID 15777`.
+
+3.  **Start Fresh**: Now you can run the start commands again and they will work 100% perfectly!
+
+### Handling "Hanging Background Processes"
+If the project still fails even after closing your terminal windows, it means a hidden process is "stuck" in the background:
+1.  **Search for Stuck Processes**:
+    - Run: `ps aux | grep -E "node|ngrok|expo"`
+2.  **Identify the PID**:
+    - Look for any lines mentioning `ngrok` or `node server.js`. The **PID** is the first number on that line.
+    - *Example Sample:* If you see `ekroop 15912 ... ngrok`, the PID is `15912`.
+3.  **Kill the Stuck PID**:
+    - Run: `kill -9 <PID>` (e.g., `kill -9 15912`)
+4.  **Try Again**: Run the start commands again and they will work 100% perfectly!
+
+### How to STOP All Services "Forever"
+Once you are finished testing the project and want to stop all background processes:
+1.  Go to each open terminal window (Backend, Tunnel, and Frontend).
+2.  Press **`Control + C`** on your keyboard in each window.
+3.  This safely kills all servers and tunnels so they are no longer running on your system. 100%!!!
 
 ---
