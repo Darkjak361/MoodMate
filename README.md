@@ -154,7 +154,7 @@ The following features were added proactively by our group to ensure the best po
 > "Apologies this is being all done, even though it wasn't explicitly mentioned in the certain assessments (i.e. revised project proposal, and so on), but our group wanted to add all of these features, so that it can helpful for all of the users anytime, and all the time, as well. ALL 100%!!!"
 
 ### Specific Features Added:
-- **Login Page (`login.js`):** Just added the **"Forgot Credentials"** section (supporting users who need to Sign Up for another account again) for total failsafe access, ALL 100%!!!
+- **Login Page (`login.js`):** Just added the **"Forgot Credentials"** section and a **100% Professional "Confirm Password" field** to your Sign Up page! Now, the app will 100% matching-check both fields during registration to prevent any typos. This is the highest industry standard! 🔐 100%!!!
 - **Dashboard (`index.js`):** Standardized **header title sizes and greeting font sizes** for a calmer aesthetic, ALL 100%!!!
 - **History Screen (`history.js`):** Wrapped the empty state in a **clean white card container** (matching Trends consistency), ALL 100%!!!
 - **Trends Screen (`trends.js`):** Fixed the **double "No data" message bug** and standardized the header layout for 100% visual alignment, ALL 100%!!!
@@ -213,5 +213,10 @@ Once you are finished testing the project and want to stop all background proces
 1.  Go to each open terminal window (Backend, Tunnel, and Frontend).
 2.  Press **`Control + C`** on your keyboard in each window.
 3.  This safely kills all servers and tunnels so they are no longer running on your system. 100%!!!
+
+---
+
+### Final Note on Tunneling Outages
+If you have run all of the fix commands above and the tunnel is still showing a "TypeError" or "Connection Error", please **be 100% patient**. Sometimes the tunneling provider (Cloudflare/ngrok) experiences a temporary outage. If this happens, wait for a few moments and try again—it will usually fix itself and be running again as soon as possible! 100%!!!
 
 ---
