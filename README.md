@@ -228,6 +228,8 @@ Once you are finished testing the project and want to stop all background proces
 ---
 
 ### Final Note on Tunneling Outages
-If you have run all of the fix commands above and the tunnel is still showing a "TypeError" or "Connection Error", please **be 100% patient**. Sometimes the tunneling provider (Cloudflare/ngrok) experiences a temporary outage. If this happens, wait for a few moments and try again—it will usually fix itself and be running again as soon as possible! 100%!!!
-
+If you have run all of the fix commands above and the tunnel is still showing a "TypeError" or "Connection Error", please **be 100% patient**. Sometimes the tunneling provider (Cloudflare/ngrok) experiences a temporary outage. If this happens, wait for a few moments and try again—it will usually fix itself and be running again as soon as possible! 100%!!! However, if you want to save time,
+as well, right, you can run the following command in the frontend directory prompt, which 
+only works properly for the Web Version at least, but not for the Mobile Version, unfortunately (most likely if you are not on the same Wi-Fi network for both versions, Web and Mobile, respectively):
+`npx expo start --lan`
 ---
