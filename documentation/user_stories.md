@@ -1,0 +1,51 @@
+# MoodMate: User Stories & Acceptance Criteria
+
+**Course:** CPAN-324-0NA | **Project:** MoodMate | **Phase:** 2 Refinement
+
+## 🧘 User Persona: The Mindful Student
+> *"As a busy college student, I want a simple way to track my stress levels and receive brief, non-judgmental encouragement so that I can stay emotionally balanced during exams."*
+
+### Story 1: Intelligent Mood Analysis
+**As a user**, I want to type my thoughts and have the AI understand my underlying sentiment.
+- **Criteria 1**: System correctly identifies POSITIVE, NEUTRAL, or NEGATIVE sentiment from natural language.
+- **Criteria 2**: System provides a context-aware insight (e.g., "It's okay to feel stressed") rather than just a score.
+
+### Story 2: Daily Engagement & Inspiration
+**As a user**, I want to see something uplifting when I open the app without needing to log a mood first.
+- **Criteria 1**: A "Daily Inspiration" card is visible on the Dashboard.
+- **Criteria 2**: The card provides a mix of quotes and calming activities.
+
+### Story 3: Privacy & Data Sovereignty
+**As a user**, I want to be able to delete my account and all my data securely.
+- **Criteria 1**: Account deletion requires password confirmation.
+- **Criteria 2**: All associated mood logs and settings are permanently removed from the database.
+
+### Story 4: Immediate Emotional Support (Wow Feature)
+**As a user**, I want a non-verbal tool to help me calm down when I am feeling overwhelmed.
+- **Criteria 1**: A "Calm Breath" tool is accessible from the Dashboard.
+- **Criteria 2**: Smooth, pulsating visuals guide the user through a breathing cycle.
+
+### Story 5: Accessibility & Voice Input (Wow Feature)
+**As a user**, I want to speak my thoughts instead of typing when I am on the go.
+- **Criteria 1**: A professional microphone UI is available on the logging screen.
+- **Criteria 2**: System simulates/processes voice-to-text with clear visual feedback.
+
+### Story 6: Adaptive Empathy (Advanced Personalization)
+**As a user**, I want the app to acknowledge if I've been having a tough few days.
+- **Criteria 1**: AI detects 3-day negative trends in mood history.
+- **Criteria 2**: Feedback becomes deeply empathetic and personalized to the trend.
+
+---
+
+## 🏗️ Stakeholder Persona: The Academic Evaluator
+> *"As a professor, I want to see clear system documentation and professional UI/UX standards so that the project meets capstone-ready industry requirements."*
+
+### Story 7: Professional UX Layout
+**As a stakeholder**, I want a clean, minimalist interface with standard navigation patterns.
+- **Criteria 1**: "Logout" is located in the global header for easy access.
+- **Criteria 2**: Font sizes and spacing (16pt/600) ensure an uncluttered, professional aesthetic.
+
+### Story 5: Technical Transparency
+**As a stakeholder**, I want to understand the system architecture and AI model logic.
+- **Criteria 1**: README contains a visual Mermaid diagram of the tech stack.
+- **Criteria 2**: AI ethics and model explanations are documented for transparency.
