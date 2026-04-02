@@ -1,6 +1,6 @@
 # MoodMate: User Stories & Acceptance Criteria
 
-**Course:** CPAN-324-0NA | **Project:** MoodMate | **Phase:** 2 Refinement
+**Course:** CPAN-324-0NA | **Project:** MoodMate | **Phase:** 2 Final Submission (Infrastructure Hardened)
 
 ## 🧘 User Persona: The Mindful Student
 > *"As a busy college student, I want a simple way to track my stress levels and receive brief, non-judgmental encouragement so that I can stay emotionally balanced during exams."*
@@ -49,3 +49,8 @@
 **As a stakeholder**, I want to understand the system architecture and AI model logic.
 - **Criteria 1**: README contains a visual Mermaid diagram of the tech stack.
 - **Criteria 2**: AI ethics and model explanations are documented for transparency.
+
+### Story 8: System Resilience & 24/7 Uptime (The Unstoppable Engine)
+**As a stakeholder**, I want the backend to be "unstoppable" so that the app never crashes during a presentation or real-world use.
+- **Criteria 1**: Implement a **"Professional Safety Shield"** (Global Error Handling) to catch and log all "Ghost Crashes" without the process exiting.
+- **Criteria 2**: Use **Cloudflare Tunneling** to ensure the Expo app can reach the backend 100% of the time, regardless of local network restrictions.

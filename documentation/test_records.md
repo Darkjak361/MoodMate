@@ -1,6 +1,6 @@
 # MoodMate: Test Records & Verification Results
 
-**Version:** 2.0.0 (Phase 2 Final) | **Date:** March 26, 2026
+**Version:** 2.1.0 (Final Submission) | **Date:** April 2, 2026
 
 ## ✅ Functional Testing
 
@@ -16,6 +16,8 @@
 | FT-08 | Mood: Breathing | Pulsating visual syncs with breath cycle. | **PASS** |
 | FT-09 | Mood: Voice UI | Mic toggle activates "Listening" state and feedback. | **PASS** |
 | FT-10 | AI: History Trend | Detect 3-day low mood -> Deploy "Deep Empathy" mode. | **PASS** |
+| FT-11 | Infra: Safety Shield | Trigger manual error -> Verify "Safety Shield" catches it and server stays 100% UP. | **PASS** |
+| FT-12 | Infra: Tunneling | Verify Expo frontend connects to backend via Cloudflare Tunnel from external network. | **PASS** |
 
 ## 🎨 Usability & UX Audit
 

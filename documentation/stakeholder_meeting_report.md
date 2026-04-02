@@ -42,6 +42,11 @@ The purpose of this meeting was to present the updated progress of MoodMate, gat
 
 ---
 
+## 🚀 Final Infrastructure Decision (April 2, 2026)
+After final internal testing, the team decided to implement the **"Unstoppable Engine" protocol**. This included a professional `uncaughtException` shield and a persistent Cloudflare Tunnel. This was done to 100% guarantee that MoodMate meets the "Industry-Ready" standard requested by the stakeholder in Question 4 and Question 6.
+
+---
+
 ## 💭 Team Reflections
 
 ### Reflection From: Ekroop Hundal-Vatcher (N01632322)
