@@ -75,6 +75,13 @@ If this is your first time running MoodMate on a new computer, you **must 100% r
 1.  Navigate to the `/frontend` folder: `cd frontend`
 2.  Install dependencies: **`npm install`** ✅
 
+### 🚀 **Crucial Next Step (1,000,000% Highly Recommended):**
+After the first installation, it is **highly recommended** to run the **"Master Update"** command in both folders to ensure all professional engineering parts are optimized to their latest versions:
+*   Run: **`npm run update:all`** (100% Professional Stability) ✅
+*   *(See Section 10: Maintenance & Updates for more details!)* 🛠️
+*   Then, run the following command in both of the folders:
+    *   **`npm install`** (100% Checkpoint 🏁 and 100% Checkmate ♟️) ✅
+
 > [!NOTE]
 > You do **NOT** need to run `npm install` in the main root folder. Only these two sub-folders require installation! 🛡️⚓️
 
@@ -92,29 +99,27 @@ To ensure the demo is **1,000,000% Flawless**, use this **"Nuclear Clean"** comm
 
 ---
 
-## ♿ 7. Accessibility & Inclusivity (100% Accessible)
+## ♿ 8. Accessibility & Inclusivity (100% Accessible)
 *   **Voice-First Design**: "Smart-Mic" allows users with motor impairments to use the app without typing. 🎤
 *   **High Contrast**: Light and Dark modes optimized for WCAG readability standards. 🌓
 
 ---
 
-## 🛡️ 8. Security & Privacy (100% Protected)
+## 🛡️ 9. Security & Privacy (100% Protected)
 *   **Data Sovereignty**: A "Master Reset" (Account Deletion) feature that wipes all data from servers. 🧹
 *   **Privacy-First Erasure (100%)**: For maximum user confidentiality, AI mood history is automatically erased on every logout. 🧹⚓️
 *   **Secure Authentication**: Industry-standard **Bcrypt** password hashing and protected API routes. ⚓️
 
 ---
 
-## 🛠️ 9. Maintenance & Updates (1,000,000% Latest)
+## 🛠️ 10. Maintenance & Updates (1,000,000% Latest)
 To keep the project updated to the latest industry standards, use these commands:
 *   **Frontend**: `npm run update:all` (Updates SDK and all packages) 🚀
 *   **Backend**: `npm run update:all` (Updates DB drivers and core logic) ⚡️
 
 ---
 
-## ⚠️ 10. Troubleshooting: Timeout Protocols
+## ⚠️ 11. Troubleshooting: Timeout Protocols
 If the connection slows down due to sleep mode or network shifts, remain patient until the tunnel reconnects. This is 100% normal in a cloud-tunneled environment! 🌐✅
-
----
 
 **MoodMate—Your 1,000,000% Reliable Emotional Companion.** 🏁🚀🤝💫🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮
