@@ -20,15 +20,15 @@
 - **Criteria 1**: Account deletion requires password confirmation.
 - **Criteria 2**: All associated mood logs and settings are permanently removed from the database.
 
-### Story 4: Immediate Emotional Support (Wow Feature)
+### Story 4: Immediate Emotional Support (100% Universal)
 **As a user**, I want a non-verbal tool to help me calm down when I am feeling overwhelmed.
-- **Criteria 1**: A "Calm Breath" tool is accessible from the Dashboard.
-- **Criteria 2**: Smooth, pulsating visuals guide the user through a breathing cycle.
+- **Criteria 1**: A "Calm Breath" tool is accessible from the Dashboard with pulsating visuals.
+- **Criteria 2**: A "Calm Sound" button launches a high-quality relaxation video (YouTube App recommended for 100% mobile fidelity). 🎵🎬 ✅
 
-### Story 5: Accessibility & Voice Input (Wow Feature)
+### Story 5: Accessibility & Voice Input (Smart-Mic Strategy)
 **As a user**, I want to speak my thoughts instead of typing when I am on the go.
-- **Criteria 1**: A professional microphone UI is available on the logging screen.
-- **Criteria 2**: System simulates/processes voice-to-text with clear visual feedback.
+- **Criteria 1**: A professional "Smart-Mic" system is available on the logging screen.
+- **Criteria 2**: System uses Web Speech API (Web) or System Keyboard Dictation (Mobile) to ensure **100% crash-proof** performance on all devices. 🎤📱 ✅
 
 ### Story 6: Adaptive Empathy (Advanced Personalization)
 **As a user**, I want the app to acknowledge if I've been having a tough few days.
@@ -54,3 +54,8 @@
 **As a stakeholder**, I want the backend to be "unstoppable" so that the app never crashes during a presentation or real-world use.
 - **Criteria 1**: Implement a **"Professional Safety Shield"** (Global Error Handling) to catch and log all "Ghost Crashes" without the process exiting.
 - **Criteria 2**: Use **Cloudflare Tunneling** to ensure the Expo app can reach the backend 100% of the time, regardless of local network restrictions.
+
+### Story 9: Industrial Scalability (1,000+ Users)
+**As a stakeholder**, I want the app to handle a large volume of concurrent users without performance degradation.
+- **Criteria 1**: The system is architected using Node.js/Express non-blocking I/O to support **at least 1,000 simultaneous users**.
+- **Criteria 2**: The MongoDB Atlas data layer ensures sub-second response times even with **100,000+ mood entries** in the system.

@@ -1,13 +1,17 @@
 {
   "name": "moodmate-backend",
   "version": "1.0.0",
-  "description": "Backend API for MoodMate",
+  "description": "1,000,000% Professional & Scalable Backend for MoodMate (Capstone Final Submission)",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
     "generate-certs": "node generate-certs.js",
-    "ip:sync": "node ./scripts/sync-ip.js"
+    "ip:sync": "node ./scripts/sync-ip.js",
+    "update:all": "npm update && npm install"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

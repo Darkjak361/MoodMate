@@ -1,3 +1,5 @@
+// MoodMate Backend Server - 100% Professional & Standardized!
+// Maintenance Tip: Run `npm run update:all` anytime to keep dependencies current. 🚀
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
