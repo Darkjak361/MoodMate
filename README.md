@@ -83,7 +83,7 @@ After the first installation, it is **highly recommended** to run the **"Master 
     *   **`npm install`** (100% Checkpoint 🏁 and 100% Checkmate ♟️) ✅
 
 > [!NOTE]
-> You do **NOT** need to run `npm install` in the main root folder. Only these two sub-folders require installation! 🛡️⚓️
+> You do **NOT** need to run `npm install` and `npm run update:all` in the main root folder. Only these two sub-folders require installation! 🛡️⚓️
 
 ---
 
