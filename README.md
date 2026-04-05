@@ -94,12 +94,20 @@ To ensure the demo is **1,000,000% Flawless**, use this **"Nuclear Clean"** comm
 *   **💻 Windows**: `Stop-Process -Name "node", "cloudflared" -Force -ErrorAction SilentlyContinue; taskkill /F /IM node.exe /IM cloudflared.exe /T`
 
 **Standard Start Sequence**:
-1.  **Backend**: `cd backend` -> `npm run ip:sync` -> `npm run dev` ✅
-2.  **Frontend**: `cd frontend` -> `npm run tunnel` ✅
+1. **Backend**: `cd backend` -> `npm run ip:sync` -> `npm run dev` ✅
+2. **Frontend**: `cd frontend` -> `npm run tunnel` ✅
 
 ---
 
-## ♿ 8. Accessibility & Inclusivity (100% Accessible)
+## 🎨 8. Visual Consistency Framework (100% Industrial Polish)
+MoodMate is designed with a **100% Unified Design Language**. Every single interactive element, card, and container across the entire ecosystem is standardized to a **1.5 Border Thickness** for maximum professional clarity and high-fidelity aesthetics. This includes:
+*   **Boxes**: Dashboard cards, History entries, and Profile categories. 📦⚖️
+*   **Inputs**: Login/Sign Up fields and mood entry text boxes. ✍️⚖️
+*   **Buttons**: Action icons, toggle switches, and navigation elements. 🔘⚖️
+
+---
+
+## ♿ 9. Accessibility & Inclusivity (100% Accessible)
 *   **Voice-First Design**: "Smart-Mic" allows users with motor impairments to use the app without typing. 🎤
 *   **High Contrast**: Light and Dark modes optimized for WCAG readability standards. 🌓
 
