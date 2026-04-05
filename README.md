@@ -130,4 +130,29 @@ To keep the project updated to the latest industry standards, use these commands
 ## ⚠️ 11. Troubleshooting: Timeout Protocols
 If the connection slows down due to sleep mode or network shifts, remain patient until the tunnel reconnects. This is 100% normal in a cloud-tunneled environment! 🌐✅
 
+---
+
+## 🔑 12. Environment Configuration (Backend)
+For the app to work **1,000,000% correctly**, you **must** create a `.env` file in the `/backend` folder with these keys:
+*   `MONGO_URI`: Your MongoDB Atlas connection string. ☁️
+*   `JWT_SECRET`: A secure random string for authentication. 🔐
+*   `HF_API_KEY`: Your Hugging Face Inference API Key. 🧠
+*   `PORT`: `5001` (Standard for MoodMate). ⚓️
+
+---
+
+## 🚀 13. Quick-Start Summary (Standard Execution)
+If everything is installed, just follow this **"Rule of Two"**:
+1.  **Terminal 1 (Backend)**: `cd backend` -> `npm run dev` ✅
+2.  **Terminal 2 (Frontend)**: `cd frontend` -> `npm run tunnel` ✅
+
+---
+
+## 🎤 14. Microphone Demo Guide (Presentation Tip)
+During your presentation, here is how the microphone will behave:
+*   **On a Web Browser (Chrome recommended)**: Click the mic icon -> A browser popup will appear at the top-left -> Click **'Allow'** -> Speak freely! 🗣️🌐
+*   **On a Mobile Device (Expo Go)**: Click the mic icon -> An alert will tell you to use the **keyboard microphone** -> The keyboard will appear -> Tap the **small microphone icon** on your keyboard to start dictation! 🗣️📱
+
+---
+
 **MoodMate—Your 1,000,000% Reliable Emotional Companion.** 🏁🚀🤝💫🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮🥇🏆🏆✨🥈🎉🏮🥈🏆🏆🥇🏆🥈🎉👋🏮
