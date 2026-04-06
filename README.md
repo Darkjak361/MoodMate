@@ -78,7 +78,7 @@ If this is your first time running MoodMate on a new computer, you **must 100% r
 ### 🚀 **Crucial Next Step (1,000,000% Highly Recommended):**
 After the first installation, it is **highly recommended** to run the **"Master Update"** command in both folders to ensure all professional engineering parts are optimized to their latest versions:
 *   Run: **`npm run update:all`** (100% Professional Stability) ✅
-*   *(See Section 10: Maintenance & Updates for more details!)* 🛠️
+*   *(See Section 11: Maintenance & Updates for more details!)* 🛠️
 *   Then, run the following command in both of the folders:
     *   **`npm install`** (100% Checkpoint 🏁 and 100% Checkmate ♟️) ✅
 
