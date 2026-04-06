@@ -94,16 +94,17 @@ To ensure the demo is **1,000,000% Flawless**, use this **"Nuclear Clean"** comm
 *   **💻 Windows**: `Stop-Process -Name "node", "cloudflared" -Force -ErrorAction SilentlyContinue; taskkill /F /IM node.exe /IM cloudflared.exe /T`
 
 **Standard Start Sequence**:
-1. **Backend**: `cd backend` -> `npm run ip:sync` -> `npm run dev` ✅
-2. **Frontend**: `cd frontend` -> `npm run tunnel` ✅
+1. **Terminal 1 (Backend)**: `cd backend` -> `npm run ip:sync` -> `npm run dev` ✅
+2. **Terminal 2 (Frontend)**: `cd frontend` -> `npm run tunnel` ✅
 
 ---
 
 ## 🎨 8. Visual Consistency Framework (100% Industrial Polish)
 MoodMate is designed with a **100% Unified Design Language**. Every single interactive element, card, and container across the entire ecosystem is standardized to a **1.5 Border Thickness** for maximum professional clarity and high-fidelity aesthetics. This includes:
-*   **Boxes**: Dashboard cards, History entries, and Profile categories. 📦⚖️
-*   **Inputs**: Login/Sign Up fields and mood entry text boxes. ✍️⚖️
-*   **Buttons**: Action icons, toggle switches, and navigation elements. 🔘⚖️
+*   **Boxes**: Dashboard cards, History entries, and Profile categories with **Standard Elevation: 5**. 📦⚖️
+*   **Inputs**: Login/Sign Up fields and mood entry text boxes with **Standard Elevation: 5**. ✍️⚖️
+*   **Buttons**: Action icons, toggle switches, and navigation elements with **Standard Elevation: 5**. 🔘⚖️
+*   **Colors**: 100% Theme-Aware semantic tokens (`success`, `error`, `neutral`, `secondary`) across all themes. 🌗⚖️
 
 ---
 
@@ -114,8 +115,9 @@ MoodMate is designed with a **100% Unified Design Language**. Every single inter
 ---
 
 ## 🛡️ 9. Security & Privacy (100% Protected)
-*   **Data Sovereignty**: A "Master Reset" (Account Deletion) feature that wipes all data from servers. 🧹
-*   **Privacy-First Erasure (100%)**: For maximum user confidentiality, AI mood history is automatically erased on every logout. 🧹⚓️
+*   **Data Sovereignty**: A "Master Reset" (Account Deletion) feature that is **1,000% Secure** with password verification. 🧹⚖️
+*   **Privacy-First Erasure (100%)**: For maximum user confidentiality, AI mood history is automatically erased on every logout (Standard Protocol). 🧹⚓️
+*   **ThemedText Logic**: A central, semantic text engine that handles all success, error, and secondary messaging with zero hardcoded styling. 📝⚖️
 *   **Secure Authentication**: Industry-standard **Bcrypt** password hashing and protected API routes. ⚓️
 
 ---
@@ -143,8 +145,8 @@ For the app to work **1,000,000% correctly**, you **must** create a `.env` file 
 
 ## 🚀 13. Quick-Start Summary (Standard Execution)
 If everything is installed, just follow this **"Rule of Two"**:
-1.  **Terminal 1 (Backend)**: `cd backend` -> `npm run dev` ✅
-2.  **Terminal 2 (Frontend)**: `cd frontend` -> `npm run tunnel` ✅
+1. **Terminal 1 (Backend)**: `cd backend` -> `npm run ip:sync` -> `npm run dev` ✅
+2. **Terminal 2 (Frontend)**: `cd frontend` -> `npm run tunnel` ✅
 
 ---
 
