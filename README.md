@@ -100,7 +100,7 @@ To ensure the demo is **1,000,000% Flawless**, use this **"Nuclear Clean"** comm
 ---
 
 ## 🎨 8. Visual Consistency Framework (100% Industrial Polish)
-MoodMate is designed with a **100% Unified Design Language**. Every interactive element is standardized to a **1.5px Border Thickness**, while high-importance centerpiece elements (like the User Avatar) feature a **2.5px Border** for maximum professional clarity and industrial-grade high-fidelity aesthetics. 🛡️⚖️✨🎯 This includes:
+MoodMate is designed with a **100% Unified Design Language**. Every interactive element is standardized to a **1.5px Gray Border Thickness** (#D1D5DB / #4B5563), while high-importance centerpiece elements (like the User Avatar) feature a **2.5px Gray Border** for maximum professional clarity and industrial-grade high-fidelity aesthetics. 🛡️⚖️✨🎯 This includes:
 *   **Boxes**: Dashboard cards, History entries, and Profile categories with **Standard Elevation: 5**. 📦⚖️
 *   **Inputs**: Login/Sign Up fields and mood entry text boxes with **Standard Elevation: 5**. ✍️⚖️
 *   **Buttons**: Action icons, toggle switches, and navigation elements with **Standard Elevation: 5**. 🔘⚖️
