@@ -79,8 +79,14 @@ If this is your first time running MoodMate on a new computer, you **must 100% r
 After the first installation, it is **highly recommended** to run the **"Master Update"** command in both folders to ensure all professional engineering parts are optimized to their latest versions:
 *   Run: **`npm run update:all`** (100% Professional Stability) ✅
 *   *(See Section 11: Maintenance & Updates for more details!)* 🛠️
-*   Then, run the following command in both of the folders:
-    *   **`npm install`** (100% Checkpoint 🏁 and 100% Checkmate ♟️) ✅
+*   Then, run the following commands for both of the folders:
+    ### ⚙️ Backend Installation:
+    1.  Navigate to the `/backend` folder: `cd backend`
+    2.  Install dependencies: **`npm install`** ✅
+
+    ### 📱 Frontend Installation:
+    1.  Navigate to the `/frontend` folder: `cd frontend`
+    2.  Install dependencies: **`npm install`** ✅
 
 > [!NOTE]
 > You do **NOT** need to run `npm install` and `npm run update:all` in the main root folder. Only these two sub-folders require installation! 🛡️⚓️
@@ -138,8 +144,8 @@ This framework applies to:
 
 ## 🛠️ 11. Maintenance & Updates (1,000,000% Latest)
 To keep the project updated to the latest industry standards, use these commands:
-*   **Frontend**: `npm run update:all` (Updates SDK and all packages) 🚀
 *   **Backend**: `npm run update:all` (Updates DB drivers and core logic) ⚡️
+*   **Frontend**: `npm run update:all` (Updates SDK and all packages) 🚀
 
 ---
 
