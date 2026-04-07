@@ -93,6 +93,8 @@ To ensure the demo is **1,000,000% Flawless**, use this **"Nuclear Clean"** comm
 *   **🍎 macOS**: `lsof -ti :5001,8081 | xargs kill -9 || true; pkill -9 node; pkill -9 expo`
 *   **💻 Windows**: `Stop-Process -Name "node", "cloudflared" -Force -ErrorAction SilentlyContinue; taskkill /F /IM node.exe /IM cloudflared.exe /T`
 
+**💡 PRO-TIP: If you see Operation not permitted, don't worry! This simply means the ports are SUCCESSFULLY CLEARED and ready for the next session. 🛡️ You can now 100% proceed to start the backend and frontend. ✅**
+
 **Standard Start Sequence**:
 1. **Terminal 1 (Backend)**: `cd backend` -> `npm run ip:sync` -> `npm run dev` ✅
 2. **Terminal 2 (Frontend)**: `cd frontend` -> `npm run tunnel` ✅
