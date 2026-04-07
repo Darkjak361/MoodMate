@@ -100,11 +100,21 @@ To ensure the demo is **1,000,000% Flawless**, use this **"Nuclear Clean"** comm
 ---
 
 ## 🎨 8. Visual Consistency Framework (100% Industrial Polish)
-MoodMate is designed with a **100% Unified Design Language**. Every interactive element is standardized to a **1.5px Gray Border Thickness** (#D1D5DB / #4B5563), while high-importance centerpiece elements (like the User Avatar) feature a **2.5px Gray Border** for maximum professional clarity and industrial-grade high-fidelity aesthetics. 🛡️⚖️✨🎯 This includes:
-*   **Boxes**: Dashboard cards, History entries, and Profile categories with **Standard Elevation: 5**. 📦⚖️
-*   **Inputs**: Login/Sign Up fields and mood entry text boxes with **Standard Elevation: 5**. ✍️⚖️
-*   **Buttons**: Action icons, toggle switches, and navigation elements with **Standard Elevation: 5**. 🔘⚖️
+MoodMate is designed with a **100% Unified Design Language**. Every interactive element is standardized to a **1.5px Gray Border Thickness** (#D1D5DB / #4B5563), while high-importance centerpiece elements (like the User Avatar) feature a **2.5px Gray Border** for maximum professional clarity and industrial-grade high-fidelity aesthetics. 🛡️⚖️✨🎯
+
+### 🛡️ The Triple-Layer Shadow Engine (100% Platform Parity)
+To ensure **1,000,000% consistency** across all versions and devices, we implemented a custom shadow engine that combines:
+*   **Web (`boxShadow`)**: 100% consistent depth rendering for desktops. 💻
+*   **Android (`elevation: 5`)**: Material Design standard for industrial feel. 🤖
+*   **iOS (`shadowColor/Offset/Opacity/Radius`)**: Native high-fidelity Gaussian blur for premium optics. 🍎
+
+This framework applies to:
+*   **Boxes**: Dashboard cards, History entries, and Profile categories. 📦⚖️
+*   **Inputs**: Login/Sign Up fields and mood entry text boxes. ✍️⚖️
+*   **Buttons**: Action icons, toggle switches, and navigation elements. 🔘⚖️
 *   **Colors**: 100% Theme-Aware semantic tokens (`success`, `error`, `neutral`, `secondary`) across all themes. 🌗⚖️
+
+---
 
 ---
 
@@ -116,7 +126,9 @@ MoodMate is designed with a **100% Unified Design Language**. Every interactive 
 
 ## 🛡️ 10. Security & Privacy (100% Protected)
 *   **Data Sovereignty**: A "Master Reset" (Account Deletion) feature that is **1,000% Secure** with password verification. 🧹⚖️
-*   **Privacy-First Erasure (100%)**: For maximum user confidentiality, AI mood history is automatically erased on every logout (Standard Protocol). 🧹⚓️
+*   **Standardized Logout Protocol (Mandated)**: All logout actions trigger a professional confirmation message to protect user data: 
+    > *"Are you sure you want to logout? Logging out will permanently delete all of your mood history and all of your trends, but all of your settings will be saved if you have any. This action cannot be undone."* 🧹⚓️
+*   **Privacy-First Erasure (100%)**: For maximum user confidentiality, AI mood history is automatically erased on every logout.
 *   **ThemedText Logic**: A central, semantic text engine that handles all success, error, and secondary messaging with zero hardcoded styling. 📝⚖️
 *   **Secure Authentication**: Industry-standard **Bcrypt** password hashing and protected API routes. ⚓️
 
