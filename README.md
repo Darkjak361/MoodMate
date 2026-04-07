@@ -68,11 +68,11 @@ MoodMate is architected for **High Concurrency** and is designed to handle **at 
 If this is your first time running MoodMate on a new computer, you **must 100% run these commands** to install all the professional engineering parts:
 
 ### ⚙️ Backend Installation:
-1.  Navigate to the `/backend` folder: `cd backend`
+1.  Navigate to the `backend` folder: `cd backend`
 2.  Install dependencies: **`npm install`** ✅
 
 ### 📱 Frontend Installation:
-1.  Navigate to the `/frontend` folder: `cd frontend`
+1.  Navigate to the `frontend` folder: `cd frontend`
 2.  Install dependencies: **`npm install`** ✅
 
 ### 🚀 **Crucial Next Step (1,000,000% Highly Recommended):**
@@ -81,11 +81,11 @@ After the first installation, it is **highly recommended** to run the **"Master 
 *   *(See Section 11: Maintenance & Updates for more details!)* 🛠️
 *   Then, run the following commands for both of the folders:
     ### ⚙️ Backend Installation:
-    1.  Navigate to the `/backend` folder: `cd backend`
+    1.  Navigate to the `backend` folder: `cd backend`
     2.  Install dependencies: **`npm install`** ✅
 
     ### 📱 Frontend Installation:
-    1.  Navigate to the `/frontend` folder: `cd frontend`
+    1.  Navigate to the `frontend` folder: `cd frontend`
     2.  Install dependencies: **`npm install`** ✅
 
 > [!NOTE]
@@ -155,7 +155,7 @@ If the connection slows down due to sleep mode or network shifts, remain patient
 ---
 
 ## 🔑 13. Environment Configuration (Backend)
-For the app to work **1,000,000% correctly**, you **must** create a `.env` file in the `/backend` folder with these keys:
+For the app to work **1,000,000% correctly**, you **must** create a `.env` file in the `backend` folder with these keys:
 *   `MONGO_URI`: Your MongoDB Atlas connection string. ☁️
 *   `JWT_SECRET`: A secure random string for authentication. 🔐
 *   `HF_API_KEY`: Your Hugging Face Inference API Key. 🧠
