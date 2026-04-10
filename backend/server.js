@@ -772,18 +772,24 @@ app.get("/api/mood/stats/summary", authenticateToken, async (req, res) => {
     const monthlyNeg = entries.filter(e => e.mood === "NEGATIVE").length;
 
     let monthlySummary = `You've logged ${entries.length} entries of emotional growth so far. `;
+    let category = "balanced";
+
     if (monthlyPos > (entries.length * 0.6)) {
       monthlySummary += "Your overall trend is strongly positive! 🌟";
+      category = "positive";
     } else if (entries.length > 5 && monthlyNeg > (entries.length * 0.4)) {
       monthlySummary += "You've faced some heavy moments lately, but you're still here showing up for yourself. 🛡️";
+      category = "negative";
     } else {
       monthlySummary += "You're building a healthy habit of regular self-reflection. ⚓️";
+      category = "balanced";
     }
 
     res.json({
       weeklySummary,
       monthlySummary,
-      patternInsight: "Your patterns show that regular check-ins help stabilize your mood over time."
+      patternInsight: "Your patterns show that regular check-ins help stabilize your mood over time.",
+      category: category
     });
   } catch (error) {
     console.error("Summary error:", error);
