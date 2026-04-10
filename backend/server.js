@@ -715,13 +715,13 @@ app.delete("/api/user", authenticateToken, async (req, res) => {
 app.get("/api/mood/stats", authenticateToken, async (req, res) => {
   try {
     const entries = await MoodEntry.find({ userId: req.user.userId });
-    
+
     res.json({
       total: entries.length,
       positive: entries.filter(e => e.mood === "POSITIVE").length,
       neutral: entries.filter(e => e.mood === "NEUTRAL").length,
       negative: entries.filter(e => e.mood === "NEGATIVE").length,
-      averageEnergy: entries.length > 0 
+      averageEnergy: entries.length > 0
         ? entries.reduce((sum, e) => sum + (e.energyLevel || 0), 0) / entries.length
         : 0
     });
