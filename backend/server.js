@@ -711,88 +711,21 @@ app.delete("/api/user", authenticateToken, async (req, res) => {
   }
 });
 
+// Standard Stats endpoint
 app.get("/api/mood/stats", authenticateToken, async (req, res) => {
-  console.log(`📊 [GET /api/mood/stats] Request started for user: ${req.user.userId}`);
   try {
     const entries = await MoodEntry.find({ userId: req.user.userId });
-    console.log(`📊 [GET /api/mood/stats] Found ${entries.length} entries for stats calculation`);
-
-    const stats = {
+    
+    res.json({
       total: entries.length,
       positive: entries.filter(e => e.mood === "POSITIVE").length,
       neutral: entries.filter(e => e.mood === "NEUTRAL").length,
       negative: entries.filter(e => e.mood === "NEGATIVE").length,
-      averageEnergy:
-        entries.length > 0
-          ? entries.reduce((sum, e) => sum + (e.energyLevel || 0), 0) / entries.length
-          : 0,
-    };
-
-    res.json(stats);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-app.get("/api/mood/stats/summary", authenticateToken, async (req, res) => {
-  console.log(`📈 [GET /api/mood/stats/summary] Generating deeper insights for: ${req.user.userId}`);
-  try {
-    const entries = await MoodEntry.find({ userId: req.user.userId }).sort({ createdAt: 1 });
-
-    if (entries.length === 0) {
-      return res.json({
-        weeklySummary: "Not enough data yet. Start logging your mood to see weekly patterns!",
-        monthlySummary: "Not enough data yet. Monthly patterns will appear after more logs.",
-        patternInsight: "Your journey starts here. Every log helps us understand your emotional patterns better."
-      });
-    }
-
-    // Weekly calculation (last 7 days)
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const weeklyEntries = entries.filter(e => new Date(e.createdAt) > weekAgo);
-
-    const weeklyPos = weeklyEntries.filter(e => e.mood === "POSITIVE").length;
-    const weeklyNeg = weeklyEntries.filter(e => e.mood === "NEGATIVE").length;
-
-    let weeklySummary = "";
-    if (weeklyEntries.length === 0) {
-      weeklySummary = "No entries in the last 7 days. Consistency is key to understanding your trends!";
-    } else if (weeklyPos > weeklyNeg) {
-      weeklySummary = "You've had a mostly positive week! Your resilience is showing through.";
-    } else if (weeklyNeg > weeklyPos) {
-      weeklySummary = "It's been a heavy week. Remember that feelings are like waves—they come and go.";
-    } else {
-      weeklySummary = "A very balanced week. You're maintaining a steady emotional baseline.";
-    }
-
-    // Monthly pattern matching
-    const monthlyPos = entries.filter(e => e.mood === "POSITIVE").length;
-    const monthlyNeg = entries.filter(e => e.mood === "NEGATIVE").length;
-
-    let monthlySummary = `You've logged ${entries.length} entries of emotional growth so far. `;
-    let category = "balanced";
-
-    if (monthlyPos > (entries.length * 0.6)) {
-      monthlySummary += "Your overall trend is strongly positive! 🌟";
-      category = "positive";
-    } else if (entries.length > 5 && monthlyNeg > (entries.length * 0.4)) {
-      monthlySummary += "You've faced some heavy moments lately, but you're still here showing up for yourself. 🛡️";
-      category = "negative";
-    } else {
-      monthlySummary += "You're building a healthy habit of regular self-reflection. ⚓️";
-      category = "balanced";
-    }
-
-    res.json({
-      weeklySummary,
-      monthlySummary,
-      patternInsight: "Your patterns show that regular check-ins help stabilize your mood over time.",
-      category: category
+      averageEnergy: entries.length > 0 
+        ? entries.reduce((sum, e) => sum + (e.energyLevel || 0), 0) / entries.length
+        : 0
     });
   } catch (error) {
-    console.error("Summary error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
