@@ -792,7 +792,22 @@ app.get("/api/activities/daily", async (req, res) => {
       { text: "Clean your phone screen with a cloth. ✨", type: "productivity", icon: "phone-portrait" },
       { text: "Listen to natural sounds (birds, rain, etc.). 🌧️", type: "mindful", icon: "thunderstorm" },
       { text: "Take a photo of something beautiful today. 📸", type: "creativity", icon: "camera" },
-      { text: "Write a sticky note with a 'You've got this!' message. 📄", type: "mindful", icon: "bookmark" }
+      { text: "Write a sticky note with a 'You've got this!' message. 📄", type: "mindful", icon: "bookmark" },
+      { text: "Count 10 things in the room that are the same color. 🌈", type: "mindful", icon: "color-palette" },
+      { text: "Take a deep breath and let out a big sigh. 🌬️", type: "mindful", icon: "leaf" },
+      { text: "Stand up and reach for the ceiling as high as you can. ⬆️", type: "physical", icon: "fitness" },
+      { text: "Message someone you haven't talked to in a while. 💬", type: "social", icon: "send" },
+      { text: "Put on your favorite outfit for no reason! 👕", type: "enjoyment", icon: "shirt" },
+      { text: "Eat a piece of fruit slowly, noticing every taste. 🍎", type: "mindful", icon: "restaurant" },
+      { text: "Search for a recipe you'd like to try next week. 🥗", type: "growth", icon: "search" },
+      { text: "Give yourself a 1-minute hand massage. 🖐️", type: "physical", icon: "hand-left" },
+      { text: "Listen to 5 minutes of your favorite podcast. 🎙️", type: "enjoyment", icon: "mic" },
+      { text: "Write down one professional goal for this month. 🏆", type: "growth", icon: "trophy" },
+      { text: "Try a 1-minute standing stretch for your legs. 🦵", type: "physical", icon: "fitness" },
+      { text: "Identify 3 sounds you can hear in the distance. 👂", type: "mindful", icon: "volume-high" },
+      { text: "Compliment yourself on a recently completed task! 🏅", type: "mindful", icon: "checkmark-circle" },
+      { text: "Take 3 slow breaths, noticing your ribcage expand. 🌬️", type: "mindful", icon: "pulse" },
+      { text: "Spend 2 minutes just listening to silence. 🤫", type: "mindful", icon: "mic-off" }
     ];
 
     const randomActivity = activities[Math.floor(Math.random() * activities.length)];
