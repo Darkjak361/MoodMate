@@ -10,6 +10,7 @@
     "ports:clear": "npx kill-port 5001 8081 || true",
     "setup": "npm run install:all && npm run ip:sync --prefix backend",
     "dev:all": "concurrently \"npm run dev --prefix backend\" \"npm run tunnel --prefix frontend\"",
+    "sdk:sync": "npm run update:project --prefix frontend",
     "lint:all": "npm run lint --prefix frontend"
   },
   "devDependencies": {

@@ -60,11 +60,10 @@ To ensure **1,000,000% reliability** across **Windows, macOS, and Linux**, use t
 | Command | Purpose | Why it's 1,000,000% Better |
 | :--- | :--- | :--- |
 | `npm run setup` | **The "Great Sync"** | Installs everything and syncs IPs in one step. Workflows for all OS! ✅ |
-| `npm run dev:all` | **The "Turbo Launch"** | Launches both Backend and Frontend servers concurrently in one terminal. 🚀 |
+| `npm run sdk:sync` | **The "Expo Shield"** | Checks and fixes Expo SDK versions for 100% Expo Go compatibility. 📱 |
 | `npm run update:all`| **The "System Refresh"**| Safely updates every industrial dependency across the entire stack. 🔄 |
 | `npm run clean:all` | **The "Nuclear Reset"** | Deletes all `node_modules` and performs a fresh, clean installation. 🛡️ |
 | `npm run ports:clear`| **The "Port Liberator"**| Force-clears ports 5001 and 8081 if they are stuck. Works 100%! 🌍 |
-| `npm run lint:all` | **The "Quality Guard"** | Runs professional code quality audits on your entire codebase. 🛡️ |
 
 ---
 
