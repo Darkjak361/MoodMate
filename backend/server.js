@@ -6,6 +6,9 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const activitiesData = require("./data/activities.json");
+const inspirationsData = require("./data/inspirations.json");
+const moodInsightsData = require("./data/moodInsights.json");
 /* apologies this is being all done, even though it 
 wasn't explicity mentioned in the certain assessments (i.e. 
 revised project proposal, and so on), but our group wanted 
@@ -515,39 +518,10 @@ app.post("/api/mood/analyze", authenticateToken, async (req, res) => {
     };
 
     const getMoodInsight = (mood) => {
-      const insights = {
-        POSITIVE: [
-          "It's wonderful to see you feeling good! Savor this energy and perhaps share a smile with someone today.",
-          "Your positive outlook is a great strength. Action: Write down one thing that made you smile to remember it later.",
-          "Radiating positivity! Action: Take a slow breath and let this feeling settle in. You've earned this moment of joy.",
-          "It's great to hear you're doing well. Action: Keep nurturing this headspace by listening to your favorite song.",
-          "You're in a great flow! Action: What's one small goal you can achieve today while your energy is high?",
-          "Wonderful energy! Action: Take a moment to appreciate your own resilience and the progress you've made.",
-        ],
-        NEUTRAL: [
-          "A steady day is a peaceful day. Action: Try a 2-minute stretch to keep your body feeling as balanced as your mind.",
-          "Balance is key. Action: A 5-minute walk or some favorite music could add a gentle spark to your afternoon.",
-          "Feeling neutral is a great time for reflection. Action: Note one thing you're looking forward to this week.",
-          "You're in a calm state. Action: Just being present is productive. Try focusing on your breath for 60 seconds.",
-          "Steady and centered. Action: Consider a quick stretch or a glass of water to maintain this healthy baseline.",
-          "A calm foundation is a beautiful thing. Action: Take a moment to just be, without any pressure to feel more.",
-        ],
-        NEGATIVE: [
-          "It's completely okay to not be okay. Action: Try the 2-minute 'Calm Breath' tool on your Dashboard right now.",
-          "Tough moments are part of the journey. Action: Take a slow, deep breath. Focus on one thing you can control right now.",
-          "I'm sorry things feel heavy. Action: Name three things you can see near you to help ground yourself in the present.",
-          "Your feelings are valid. Action: Consider taking a quiet 5-minute break or reaching out to someone you trust.",
-          "Heavy days happen, but they don't define you. Action: Rest if you need to; try a grounding exercise to feel centered.",
-          "If things feel overwhelming, Action: Try the Breathing Exercise on the home screen to find your center again.",
-        ],
-      };
-      const moodInsights = insights[mood] || insights.NEUTRAL;
-      const timestamp = Date.now();
+      const insightsPool = moodInsightsData[mood] || moodInsightsData.NEUTRAL;
       const random = Math.random();
-      const combinedSeed = (timestamp % 1000000) + (random * 1000);
-      const randomIndex = Math.floor(combinedSeed % moodInsights.length);
-      const selectedInsight = moodInsights[randomIndex];
-      console.log(`Generated ${mood} insight (index ${randomIndex}/${moodInsights.length}) at ${timestamp}: "${selectedInsight}"`);
+      const randomIndex = Math.floor(random * insightsPool.length);
+      const selectedInsight = insightsPool[randomIndex];
       return selectedInsight;
     };
 
@@ -732,27 +706,12 @@ app.get("/api/mood/stats", authenticateToken, async (req, res) => {
 
 app.get("/api/quotes/daily", async (req, res) => {
   try {
-    // 100% Professional Dynamic Quotes Engine with 1,000,000% Fallback Reliability!!!
-    const response = await fetch("https://zenquotes.io/api/random");
-    if (response.ok) {
-      const data = await response.json();
-      if (data && data[0]) {
-        return res.json({
-          text: data[0].q,
-          author: data[0].a
-        });
-      }
-    }
-
-    // 🏆 Fallback Pool for Maximum Stability!!!
-    const fallbacks = [
-      { text: "Your mental health is a priority. Your happiness is an essential. Your self-care is a necessity.", author: "MoodMate" },
-      { text: "The only way out is through.", author: "Robert Frost" },
-      { text: "Small steps every day lead to big changes.", author: "Professional Wellness" },
-      { text: "You are consistent, resilient, and industry-ready for anything!", author: "MoodMate Team" }
-    ];
-    const quote = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-    res.json(quote);
+    // 🏆 1,000,000% Reliable Professional Master Inspiration Pool (20,000 Items!)
+    const randomQuote = inspirationsData[Math.floor(Math.random() * inspirationsData.length)];
+    res.json({
+      text: randomQuote.q,
+      author: randomQuote.a
+    });
   } catch (error) {
     res.json({ text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" });
   }
@@ -760,81 +719,8 @@ app.get("/api/quotes/daily", async (req, res) => {
 
 app.get("/api/activities/daily", async (req, res) => {
   try {
-    // 🏆 1,000,000% Reliable Professional Activity Pool
-    const activities = [
-      { text: "Take a 5-minute walk around your block. 🚶‍♂️", type: "physical", icon: "walk" },
-      { text: "Write down 3 things you're 100% grateful for today. 📝", type: "mindful", icon: "journal" },
-      { text: "Drink a full glass of water right now. 💧", type: "health", icon: "water" },
-      { text: "Listen to a song that makes you want to dance. 🎵", type: "enjoyment", icon: "musical-notes" },
-      { text: "Try a 2-minute 'Calm Breath' exercise. 🌬️", type: "mindful", icon: "leaf" },
-      { text: "Tidy up one small area of your desk/room. ✨", type: "productivity", icon: "sparkles" },
-      { text: "Reach out to a friend with a quick 'Helllo' text. 👋", type: "social", icon: "chatbubbles" },
-      { text: "Stretch your neck and shoulders for 60 seconds. 🧘‍♂️", type: "physical", icon: "fitness" },
-      { text: "Sit outside and notice 5 things you can see. 🌳", type: "mindful", icon: "eye" },
-      { text: "Doodle something random for 3 minutes. 🎨", type: "creativity", icon: "brush" },
-      { text: "Read 5 pages of a book you enjoy. 📚", type: "growth", icon: "book" },
-      { text: "Cook a healthy meal from scratch. 🥗", type: "health", icon: "restaurant" },
-      { text: "Practice 1 minute of standing on one leg (balance!). ⚖️", type: "physical", icon: "body" },
-      { text: "Organize your phone's home screen. 📱", type: "productivity", icon: "apps" },
-      { text: "Give yourself a 100% genuine compliment. ✨", type: "mindful", icon: "heart" },
-      { text: "Try a new type of tea or coffee. ☕", type: "enjoyment", icon: "cafe" },
-      { text: "Watch a short funny video to boost your mood. 😂", type: "enjoyment", icon: "videocam" },
-      { text: "Plant a small herb or flower. 🌱", type: "nature", icon: "flower" },
-      { text: "Declutter 5 files from your computer. 💻", type: "productivity", icon: "document" },
-      { text: "Spend 2 minutes just observing your breath. 🌬️", type: "mindful", icon: "pulse" },
-      { text: "Write a positive comment on someone's post. ✍️", type: "social", icon: "chatbubbles" },
-      { text: "Do 10 jumping jacks for quick energy. ⚡", type: "physical", icon: "fitness" },
-      { text: "Notice the feeling of your feet on the floor. 🦶", type: "mindful", icon: "body" },
-      { text: "Plan one fun thing to do this weekend. 🗓️", type: "enjoyment", icon: "calendar" },
-      { text: "Turn off all notifications for 30 minutes. 📵", type: "mindful", icon: "notifications-off" },
-      { text: "Smile at yourself in the mirror for 10 seconds. 😊", type: "mindful", icon: "happy" },
-      { text: "Clean your phone screen with a cloth. ✨", type: "productivity", icon: "phone-portrait" },
-      { text: "Listen to natural sounds (birds, rain, etc.). 🌧️", type: "mindful", icon: "thunderstorm" },
-      { text: "Take a photo of something beautiful today. 📸", type: "creativity", icon: "camera" },
-      { text: "Write a sticky note with a 'You've got this!' message. 📄", type: "mindful", icon: "bookmark" },
-      { text: "Count 10 things in the room that are the same color. 🌈", type: "mindful", icon: "color-palette" },
-      { text: "Take a deep breath and let out a big sigh. 🌬️", type: "mindful", icon: "leaf" },
-      { text: "Stand up and reach for the ceiling as high as you can. ⬆️", type: "physical", icon: "fitness" },
-      { text: "Message someone you haven't talked to in a while. 💬", type: "social", icon: "send" },
-      { text: "Put on your favorite outfit for no reason! 👕", type: "enjoyment", icon: "shirt" },
-      { text: "Eat a piece of fruit slowly, noticing every taste. 🍎", type: "mindful", icon: "restaurant" },
-      { text: "Search for a recipe you'd like to try next week. 🥗", type: "growth", icon: "search" },
-      { text: "Give yourself a 1-minute hand massage. 🖐️", type: "physical", icon: "hand-left" },
-      { text: "Listen to 5 minutes of your favorite podcast. 🎙️", type: "enjoyment", icon: "mic" },
-      { text: "Write down one professional goal for this month. 🏆", type: "growth", icon: "trophy" },
-      { text: "Try a 1-minute standing stretch for your legs. 🦵", type: "physical", icon: "fitness" },
-      { text: "Identify 3 sounds you can hear in the distance. 👂", type: "mindful", icon: "volume-high" },
-      { text: "Compliment yourself on a recently completed task! 🏅", type: "mindful", icon: "checkmark-circle" },
-      { text: "Take 3 slow breaths, noticing your ribcage expand. 🌬️", type: "mindful", icon: "pulse" },
-      { text: "Spend 2 minutes just listening to silence. 🤫", type: "mindful", icon: "mic-off" },
-      { text: "Learn a new word and use it in a sentence. 📖", type: "growth", icon: "book" },
-      { text: "Write a thank-you note to someone you appreciate. ✉️", type: "social", icon: "mail" },
-      { text: "Try to balance a book on your head for 10 seconds. 📚", type: "physical", icon: "body" },
-      { text: "Close your eyes and name the first 3 colors you think of. 🎨", type: "mindful", icon: "brush" },
-      { text: "Drink a warm cup of herbal tea. 🍵", type: "health", icon: "cafe" },
-      { text: "Unsubscribe from one email list you don't need. 🗑️", type: "productivity", icon: "trash" },
-      { text: "Find a window and look as far as you can see. 👁️", type: "mindful", icon: "eye" },
-      { text: "Hum your favorite tune for 30 seconds. 🎶", type: "enjoyment", icon: "musical-note" },
-      { text: "Pick one vegetable to add to your next meal. 🥕", type: "health", icon: "restaurant" },
-      { text: "Set a timer for 1 minute and do a 'Freeze Dance'. 💃", type: "enjoyment", icon: "fitness" },
-      { text: "Write down a dream you had recently. 🌙", type: "mindful", icon: "moon" },
-      { text: "Organize one drawer or shelf. 📁", type: "productivity", icon: "folder" },
-      { text: "Spend 1 minute imagining your favorite place. 🏖️", type: "mindful", icon: "sunny" },
-      { text: "Try to draw a cat with your non-dominant hand. 🐈", type: "creativity", icon: "brush" },
-      { text: "Take a 2-minute break away from all screens. 📵", type: "mindful", icon: "phone-portrait" },
-      { text: "Read a poem out loud. 📜", type: "growth", icon: "book" },
-      { text: "Say 'Thank You' to yourself for your hard work. 💖", type: "mindful", icon: "heart" },
-      { text: "Try a new fruit you've never had before. 🥝", type: "health", icon: "nutrition" },
-      { text: "Do a 1-minute wall sit. 🦵", type: "physical", icon: "fitness" },
-      { text: "Notice 3 things that are smooth near you. 🤚", type: "mindful", icon: "hand-left" },
-      { text: "Listen to a sound from nature for 2 minutes. 🌊", type: "mindful", icon: "water" },
-      { text: "Write down one thing that made you laugh today. 😂", type: "enjoyment", icon: "happy" },
-      { text: "Try a 30-second plank. 🧗‍♂️", type: "physical", icon: "fitness" },
-      { text: "Find a piece of art and look at it for 2 minutes. 🖼️", type: "mindful", icon: "image" },
-      { text: "Tell someone a joke! 🤡", type: "social", icon: "chatbubble" }
-    ];
-
-    const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+    // 🏆 1,000,000% Reliable Professional Master Database (3,650+ Items!)
+    const randomActivity = activitiesData[Math.floor(Math.random() * activitiesData.length)];
     res.json(randomActivity);
   } catch (error) {
     res.json({ text: "Take a deep breath and smile. 100%!!!", type: "mindful", icon: "happy" });
