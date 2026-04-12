@@ -77,7 +77,7 @@ To ensure **1,000,000% reliability** across **Windows, macOS, and Linux**, use t
 
 ### 🔧 Step 1: Backend Setup
 1.  Navigate to the folder: `cd backend`
-2.  Install dependencies: `npm install` (If needed, run `npm run update:all` to update to the latest version of the project)
+2.  Install dependencies: `npm install`
 3.  Create a `.env` file with these keys (100% Required!):
     ```env
     MONGO_URI=your_mongodb_connection_string
@@ -88,7 +88,7 @@ To ensure **1,000,000% reliability** across **Windows, macOS, and Linux**, use t
 
 ### 🔧 Step 2: Frontend Setup
 1.  Navigate to the folder: `cd frontend`
-2.  Install dependencies: `npm install` (If needed, run `npm run update:all` to update to the latest version of the project)
+2.  Install dependencies: `npm install`
 
 ---
 
