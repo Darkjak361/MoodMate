@@ -16,7 +16,7 @@
 ```mermaid
 graph TD
     User((User)) -->|Touch/Voice| Frontend[React Native / Expo Go]
-    Frontend -->|30s Timeout Shield| Tunnel[Cloudfare Tunnel]
+    Frontend -->|30s Timeout Shield| Tunnel[Cloudflare Tunnel]
     Tunnel -->|Requests| Backend[Node.js / Express]
     Backend -->|Data Lookup| JSON[(100,000 Item Master DB)]
     Backend -->|User Data| DB[(MongoDB Atlas Cloud)]
