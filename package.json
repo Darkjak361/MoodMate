@@ -1,0 +1,12 @@
+{
+  "name": "moodmate-root",
+  "version": "1.0.0",
+  "description": "1,000,000% Professional Master Root for MoodMate (Capstone Final Submission)",
+  "private": true,
+  "scripts": {
+    "update:all": "cd backend && npm run update:all && cd .. && cd frontend && npm run update:all",
+    "clean:all": "rm -rf backend/node_modules frontend/node_modules && npm run install:all",
+    "install:all": "cd backend && npm install && cd .. && cd frontend && npm install",
+    "ports:clear": "lsof -ti :5001,8081 | xargs kill -9 || true"
+  }
+}
