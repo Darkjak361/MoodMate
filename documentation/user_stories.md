@@ -1,6 +1,6 @@
 # MoodMate: User Stories & Acceptance Criteria
 
-**Course:** CPAN-324-0NA | **Project:** MoodMate | **Phase:** 2 Final Submission (Infrastructure Hardened)
+**Course:** CPAN-324-0NA | **Project:** MoodMate | **Phase:** 2 Final Submission (April 12, 2026)
 
 ## 🧘 User Persona: The Mindful Student
 > *"As a busy college student, I want a simple way to track my stress levels and receive brief, non-judgmental encouragement so that I can stay emotionally balanced during exams."*
@@ -45,22 +45,22 @@
 - **Criteria 1**: "Logout" is located in the global header for easy access.
 - **Criteria 2**: Font sizes and spacing (16pt/600) ensure an uncluttered, professional aesthetic.
 
-### Story 5: Technical Transparency
+### Story 8: Technical Transparency
 **As a stakeholder**, I want to understand the system architecture and AI model logic.
 - **Criteria 1**: README contains a visual Mermaid diagram of the tech stack.
 - **Criteria 2**: AI ethics and model explanations are documented for transparency.
 
-### Story 8: System Resilience & 24/7 Uptime (The Unstoppable Engine)
+### Story 9: System Resilience & 24/7 Uptime (The Unstoppable Engine)
 **As a stakeholder**, I want the backend to be "unstoppable" so that the app never crashes during a presentation or real-world use.
 - **Criteria 1**: Implement a **"Professional Safety Shield"** (Global Error Handling) to catch and log all "Ghost Crashes" without the process exiting.
 - **Criteria 2**: Use **Cloudflare Tunneling** to ensure the Expo app can reach the backend 100% of the time, regardless of local network restrictions.
 
-### Story 9: Industrial Scalability (1,000+ Users)
+### Story 10: Industrial Scalability (1,000+ Users)
 **As a stakeholder**, I want the app to handle a large volume of concurrent users and a massive amount of variety without performance degradation.
 - **Criteria 1**: The system is architected using Node.js/Express non-blocking I/O to support **at least 1,000 simultaneous users**.
 - **Criteria 2**: The **Industrial Content Engine** provides 100,000 unique records (20k Activities, 20k Inspirations, 60k Mood Insights), ensuring zero repetition for decades.
 
-### Story 10: Unbreakable Network Resilience (Grounding Sync)
+### Story 11: Unbreakable Network Resilience (Grounding Sync)
 **As a user**, I want to know my data is safe even if my network connection is unstable during my commute or at school.
 - **Criteria 1**: The **"Grounding Sync" Engine** caches data locally if the backend is unreachable.
 - **Criteria 2**: System features a **30s Timeout Shield** to gracefully handle high-latency mobile conditions without surfacing errors to the user.
