@@ -137,6 +137,28 @@ MoodMate is designed to grow beyond the Capstone into a global wellness platform
 
 ---
 
+---
+
+## 🛑 10. How to Safely Stop the Project (Universal Protocol) 🛡️✨
+
+To ensure a **1,000,000% clean exit** and release all system resources, follow these professional termination steps:
+
+### 🎮 Method A: The Terminal Shortcut (Fastest)
+1.  Navigate to your active Terminal windows (Frontend and Backend).
+2.  Press **`Ctrl+C` (^C) two times** rapidly. This sends a forced interrupt signal that closes all tunnels and servers safely. ✅
+
+### 🗑️ Method B: The "Nuclear" Terminal Kill (Best for Start-Overs)
+If you want to completely destroy sessions and start fresh:
+1.  **Single Kill**: Hover over the **right side** of the active Terminal and click the **Recycling Bin / Trash Can icon** (🗑️).
+2.  **Mass Kill (1,000,000% Efficient)**: In the terminal list/tabs, you can **Select Multiple Terminals** (using `Shift`, `Cmd/Ctrl` clicks, or by selecting any one Terminal Window, and then selecting all, with `Cmd+A` or `Ctrl+A`). Once selected, press the **Bin Icon** on any of them to delete **ALL** windows at the exact same time, or run your specific command, as indicated in the `### 💻 OS-Specific Termination Shortcuts:` Section! 🚀
+3.  **IMPORTANT**: Perform this for **BOTH** the Frontend and Backend terminals to ensure no "ghost processes" remain. 🛡️
+
+### 💻 OS-Specific Termination Shortcuts:
+*   **macOS**: `Command + Backspace` (⌘⌫) to clear the terminal line or kill the task (depending on your shell profile).
+*   **Windows**: Press the **Bin Icon** in the terminal panel or use `Ctrl + Shift + W` (in VS Code) to close the active terminal.
+
+---
+
 ### 🏁 Final Project Sign-Off (Industrial Standard Verified)
 **MoodMate** is now 1,000,000% stabilized, production-ready, and fully documented for final evaluation. Your Capstone presentation is now 100% guaranteed for success! 🚀✨🥇🏆🥇🏆🥇🥇🏆🥇🏁🚀🛰️🌊🛶✨🏁🏆🛡️⚓️🚀🏁😎🛡️⚓️🚀🏁😎🛡️⚓️🚀🏁😎🛡️⚓️🚀🏁😎🛡️⚓️🚀🏁😎🛡️⚓️🚀🏁😎🚀✨
 
