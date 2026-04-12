@@ -760,8 +760,7 @@ app.get("/api/quotes/daily", async (req, res) => {
 
 app.get("/api/activities/daily", async (req, res) => {
   try {
-    // 🏆 1,000,000% Reliable Professional Activity Pool!!!
-    // This ensures "Trillions" of variety and ZERO downtime for your capstone!
+    // 🏆 1,000,000% Reliable Professional Activity Pool
     const activities = [
       { text: "Take a 5-minute walk around your block. 🚶‍♂️", type: "physical", icon: "walk" },
       { text: "Write down 3 things you're 100% grateful for today. 📝", type: "mindful", icon: "journal" },
@@ -807,7 +806,32 @@ app.get("/api/activities/daily", async (req, res) => {
       { text: "Identify 3 sounds you can hear in the distance. 👂", type: "mindful", icon: "volume-high" },
       { text: "Compliment yourself on a recently completed task! 🏅", type: "mindful", icon: "checkmark-circle" },
       { text: "Take 3 slow breaths, noticing your ribcage expand. 🌬️", type: "mindful", icon: "pulse" },
-      { text: "Spend 2 minutes just listening to silence. 🤫", type: "mindful", icon: "mic-off" }
+      { text: "Spend 2 minutes just listening to silence. 🤫", type: "mindful", icon: "mic-off" },
+      { text: "Learn a new word and use it in a sentence. 📖", type: "growth", icon: "book" },
+      { text: "Write a thank-you note to someone you appreciate. ✉️", type: "social", icon: "mail" },
+      { text: "Try to balance a book on your head for 10 seconds. 📚", type: "physical", icon: "body" },
+      { text: "Close your eyes and name the first 3 colors you think of. 🎨", type: "mindful", icon: "brush" },
+      { text: "Drink a warm cup of herbal tea. 🍵", type: "health", icon: "cafe" },
+      { text: "Unsubscribe from one email list you don't need. 🗑️", type: "productivity", icon: "trash" },
+      { text: "Find a window and look as far as you can see. 👁️", type: "mindful", icon: "eye" },
+      { text: "Hum your favorite tune for 30 seconds. 🎶", type: "enjoyment", icon: "musical-note" },
+      { text: "Pick one vegetable to add to your next meal. 🥕", type: "health", icon: "restaurant" },
+      { text: "Set a timer for 1 minute and do a 'Freeze Dance'. 💃", type: "enjoyment", icon: "fitness" },
+      { text: "Write down a dream you had recently. 🌙", type: "mindful", icon: "moon" },
+      { text: "Organize one drawer or shelf. 📁", type: "productivity", icon: "folder" },
+      { text: "Spend 1 minute imagining your favorite place. 🏖️", type: "mindful", icon: "sunny" },
+      { text: "Try to draw a cat with your non-dominant hand. 🐈", type: "creativity", icon: "brush" },
+      { text: "Take a 2-minute break away from all screens. 📵", type: "mindful", icon: "phone-portrait" },
+      { text: "Read a poem out loud. 📜", type: "growth", icon: "book" },
+      { text: "Say 'Thank You' to yourself for your hard work. 💖", type: "mindful", icon: "heart" },
+      { text: "Try a new fruit you've never had before. 🥝", type: "health", icon: "nutrition" },
+      { text: "Do a 1-minute wall sit. 🦵", type: "physical", icon: "fitness" },
+      { text: "Notice 3 things that are smooth near you. 🤚", type: "mindful", icon: "hand-left" },
+      { text: "Listen to a sound from nature for 2 minutes. 🌊", type: "mindful", icon: "water" },
+      { text: "Write down one thing that made you laugh today. 😂", type: "enjoyment", icon: "happy" },
+      { text: "Try a 30-second plank. 🧗‍♂️", type: "physical", icon: "fitness" },
+      { text: "Find a piece of art and look at it for 2 minutes. 🖼️", type: "mindful", icon: "image" },
+      { text: "Tell someone a joke! 🤡", type: "social", icon: "chatbubble" }
     ];
 
     const randomActivity = activities[Math.floor(Math.random() * activities.length)];
