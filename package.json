@@ -4,9 +4,12 @@
   "description": "1,000,000% Professional Master Root for MoodMate (Capstone Final Submission)",
   "private": true,
   "scripts": {
-    "update:all": "cd backend && npm run update:all && cd .. && cd frontend && npm run update:all",
-    "clean:all": "rm -rf backend/node_modules frontend/node_modules && npm run install:all",
+    "update:all": "npm run install:all && cd backend && npm run update:all && cd .. && cd frontend && npm run update:all",
+    "clean:all": "rimraf backend/node_modules frontend/node_modules && npm run install:all",
     "install:all": "cd backend && npm install && cd .. && cd frontend && npm install",
-    "ports:clear": "lsof -ti :5001,8081 | xargs kill -9 || true"
+    "ports:clear": "npx kill-port 5001 8081 || true"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.0"
   }
 }

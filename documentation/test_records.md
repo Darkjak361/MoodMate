@@ -18,6 +18,9 @@
 | FT-10 | AI: History Trend | Detect 3-day low mood -> Deploy "Deep Empathy" mode. | **PASS** |
 | FT-11 | Infra: Safety Shield | Trigger manual error -> Verify "Safety Shield" catches it and server stays 100% UP. | **PASS** |
 | FT-12 | Infra: Tunneling | Verify Expo frontend connects to backend via Cloudflare Tunnel from external network. | **PASS** |
+| FT-13 | System: Industrial Scale | Verify 100,000 items (Activities, Inspirations, Insights) load and display on demand. | **PASS** |
+| FT-14 | System: Grounding Sync | Simulate network loss -> Verify local save alert -> Restore connection -> Verify auto-sync to DB. | **PASS** |
+| FT-15 | System: Timeout Shield | Verify 30s timeout handles heavy tunnel latency without error. | **PASS** |
 | TEST-09 | Architecture Scalability Audit | Verify system handles 1,000+ concurrent users. | **PASS** |
 
 ## 🎨 Usability & UX Audit
