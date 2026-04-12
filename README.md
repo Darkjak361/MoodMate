@@ -51,7 +51,24 @@ MoodMate has been scaled to an **Industrial "Century" Level**, ensuring 100% var
 
 ---
 
-## 📦 4. Full Installation Guide (Step-by-Step 100%)
+---
+
+## 🌍 4. Universal Industrial Terminal Commands (100% Cross-Platform) 🚀✨
+
+To ensure **1,000,000% reliability** across **Windows, macOS, and Linux**, use these standardized "Master" commands from the **root directory**. These commands use industrial-grade automation to handle paths and environments for you:
+
+| Command | Purpose | Why it's 1,000,000% Better |
+| :--- | :--- | :--- |
+| `npm run setup` | **The "Great Sync"** | Installs everything and syncs IPs in one step. Workflows for all OS! ✅ |
+| `npm run dev:all` | **The "Turbo Launch"** | Launches both Backend and Frontend servers concurrently in one terminal. 🚀 |
+| `npm run update:all`| **The "System Refresh"**| Safely updates every industrial dependency across the entire stack. 🔄 |
+| `npm run clean:all` | **The "Nuclear Reset"** | Deletes all `node_modules` and performs a fresh, clean installation. 🛡️ |
+| `npm run ports:clear`| **The "Port Liberator"**| Force-clears ports 5001 and 8081 if they are stuck. Works 100%! 🌍 |
+| `npm run lint:all` | **The "Quality Guard"** | Runs professional code quality audits on your entire codebase. 🛡️ |
+
+---
+
+## 📦 5. Full Installation Guide (Step-by-Step 100%)
 
 ### ⚙️ Prerequisites (Required Software)
 1.  **Node.js (v18+)**: [Download Here](https://nodejs.org/). This runs the backend and frontend servers. ⚡️
@@ -76,7 +93,7 @@ MoodMate has been scaled to an **Industrial "Century" Level**, ensuring 100% var
 
 ---
 
-## 🚀 5. How to Start the App (100% Success Protocol)
+## 🚀 6. How to Start the App (100% Success Protocol)
 
 To ensure the demo is **1,000,000% Flawless**, follow this exact sequence:
 
@@ -94,7 +111,7 @@ To ensure the demo is **1,000,000% Flawless**, follow this exact sequence:
 
 ---
 
-## 📱 6. Mobile Deployment (iOS & Android - Expo Go) 🌟✨
+## 📱 7. Mobile Deployment (iOS & Android - Expo Go) 🌟✨
 
 MoodMate is optimized to work **1,000% reliably** on real phones using the **Cloudflared Tunnel** architecture:
 1.  **Start the Tunnel**: Run `npm run tunnel` in the `frontend` folder.
@@ -105,14 +122,14 @@ MoodMate is optimized to work **1,000% reliably** on real phones using the **Clo
 
 ---
 
-## 🛠️ 7. Presentation Rescue (Port 5001/8081 Clearing)
+## 🛠️ 8. Presentation Rescue (Port 5001/8081 Clearing)
 If you see an error saying "Port already in use", run this **Universal "Nuclear Clean"** command (Works 100% on Windows, Mac, and Linux):
 *   **🌍 Universal Command**: `npm run ports:clear`
 *   **(Alternatively)**: `npx kill-port 5001 8081`
 
 ---
 
-## 🚀 8. Future Industrial Roadmap (2026-2027)
+## 🚀 9. Future Industrial Roadmap (2026-2027)
 MoodMate is designed to grow beyond the Capstone into a global wellness platform:
 - [ ] **AI Voice Synthesis**: Providing spoken empathetic responses for a 100% immersive experience.
 - [ ] **Global Expansion**: Multi-language support (Spanish, French, Punjabi, Hindi) for universal wellness.
