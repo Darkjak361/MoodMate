@@ -107,6 +107,7 @@ To ensure the demo is **1,000,000% Flawless**, follow this exact sequence:
 2.  `cd frontend`
 3.  **`npm run tunnel`** 🚀
 4.  **(Wait for the QR Code to appear! Localtunnel + Expo Tunnel will sync 100% automatically!)** ✅
+5.  **`NOTE: Best thing is open http://localhost:8081/ in the web browser, as it is the fastest and most reliable way to test the app. Also, if you have any issues running all of the commands, at all, for all of the MoodMate Project, while testing all of the App, Project, and so on, as well, right, kindly please feel free to ask Artificial Intelligence (AI) for help at all, anytime, like Antigravity, for example, as well.`**
 
 ---
 
