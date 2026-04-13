@@ -46,8 +46,16 @@ MoodMate has been scaled to an **Industrial "Century" Level**, ensuring 100% var
 *   **⏳ 30s Timeout Shield**: Advanced network handling tailored for mobile stability over Cloudflare tunnels.
 *   **📈 Smart Trends Engine**: Reactive graphs with **100% Reliable Mobile Touch Interaction** on Expo Go. 🚀
 *   **🎤 Universal Smart-Mic**: Voice input that works across **iOS, Android, and Web browsers** instantly.
-*   **🌗 Cloud-Synced Theme Engine**: Remembers your Dark/Light mode preferences across every device you own.
+*   **🌗 Cloud-Synced Theme Engine**: A "Triple-Shield" architecture that remembers your preferences 100% across all devices.
 *   **🛡️ Safety-First Login Protocol**: Professional Auth with **Bcrypt Hashing** and **JWT Security**.
+
+### 🌓 The Triple-Shield Theme Architecture (100% Unified)
+MoodMate is one of the only capstone projects with a **Unified Identity Theme Engine**. It works in three distinct, synchronized layers:
+1.  **🌗 Layer 1: System-Pulse Detection**: Uses the React Native `useColorScheme()` hook to instantly detect if your iPhone, Android, or Browser is in Light or Dark mode. It matches your mood before you even log in!
+2.  **💾 Layer 2: Grounding Local Memory**: Every toggle is saved to the device's **AsyncStorage**. This means if you close the app and reopen it, your theme is waiting for you 100% reliably.
+3.  **🌍 Layer 3: Atlas Cloud Synchronization**: Your preference is transmitted to the **MongoDB Atlas** database. If you log in on a computer, your phone settings follow you! This is "Universal Theme Identity" at its finest. 🥇🏆🥇
+
+---
 
 ---
 
