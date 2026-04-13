@@ -9,30 +9,16 @@ const path = require("path");
  */
 
 const getLocalIp = () => {
-    const nets = os.networkInterfaces();
-    // 🏆 1,000,000% Robust Cross-Platform IP Discovery (V2)
-    // Prioritizes common Wi-Fi/Ethernet interface names across Mac, Windows, and Linux.
-    const priorityInterfaces = ["en0", "en1", "wlan0", "eth0", "Wi-Fi", "Ethernet"];
-    
-    // Sort interfaces to check priority ones first
-    const sortedInterfaceNames = Object.keys(nets).sort((a, b) => {
-        const aIdx = priorityInterfaces.findIndex(p => a.includes(p));
-        const bIdx = priorityInterfaces.findIndex(p => b.includes(p));
-        if (aIdx === -1 && bIdx === -1) return 0;
-        if (aIdx === -1) return 1;
-        if (bIdx === -1) return -1;
-        return aIdx - bIdx;
-    });
-
-    for (const name of sortedInterfaceNames) {
-        for (const net of nets[name]) {
-            // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-            if (net.family === "IPv4" && !net.internal) {
-                return net.address;
-            }
-        }
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+      if (net.family === "IPv4" && !net.internal) {
+        return net.address;
+      }
     }
-    return "127.0.0.1";
+  }
+  return "localhost";
 };
 
 const syncIp = () => {

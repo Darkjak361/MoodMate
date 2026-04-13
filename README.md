@@ -100,13 +100,13 @@ To ensure the demo is **1,000,000% Flawless**, follow this exact sequence:
 1.  Open Terminal 1.
 2.  `cd backend`
 3.  `npm run ip:sync`
-3.  **`npm run dev`** (Wait until it says "Connected to MongoDB"! ✅)
+4.  **`npm run dev`** (Wait until it says "Connected to MongoDB"! ✅)
 
-### 🏁 Step B: Start the Frontend (Tunnel)
+### 🏁 Step B: Start the Frontend (Zero-Install One-Shot)
 1.  Open Terminal 2.
 2.  `cd frontend`
 3.  **`npm run tunnel`** 🚀
-4.  **(Wait for the QR Code and the Blue Tunnel URL to appear!)** ✅
+4.  **(Wait for the QR Code to appear! Localtunnel + Expo Tunnel will sync 100% automatically!)** ✅
 
 ---
 

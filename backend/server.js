@@ -18,10 +18,10 @@ all of the users anytime, and all the time, as well. ADDITIONALLY, WE JUST ADDED
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: true,
+  origin: "*", // 🛡️ 1,000,000% Global Tunnel Freedom!
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "bypass-tunnel-reminder"], // 🚀 Registered Bypass Shield!
 }));
 
 mongoose
@@ -706,7 +706,6 @@ app.get("/api/mood/stats", authenticateToken, async (req, res) => {
 
 app.get("/api/quotes/daily", async (req, res) => {
   try {
-    // 🏆 1,000,000% Reliable Professional Master Inspiration Pool (20,000 Items!)
     const randomQuote = inspirationsData[Math.floor(Math.random() * inspirationsData.length)];
     res.json({
       text: randomQuote.q,
@@ -719,11 +718,10 @@ app.get("/api/quotes/daily", async (req, res) => {
 
 app.get("/api/activities/daily", async (req, res) => {
   try {
-    // 🏆 1,000,000% Reliable Professional Master Database (3,650+ Items!)
     const randomActivity = activitiesData[Math.floor(Math.random() * activitiesData.length)];
     res.json(randomActivity);
   } catch (error) {
-    res.json({ text: "Take a deep breath and smile. 100%!!!", type: "mindful", icon: "happy" });
+    res.json({ text: "Take a deep breath and smile.", type: "mindful", icon: "happy" });
   }
 });
 
