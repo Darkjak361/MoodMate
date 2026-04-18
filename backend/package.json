@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "cloud": "node ./scripts/cloud-bridge.js",
     "generate-certs": "node generate-certs.js",
     "ip:sync": "node ./scripts/sync-ip.js",
     "update:all": "npm update && npm install"

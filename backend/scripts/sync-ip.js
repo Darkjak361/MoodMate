@@ -10,42 +10,60 @@ const path = require("path");
 
 const getLocalIp = () => {
   const nets = os.networkInterfaces();
+  
+  // 1. First Pass: Look specifically for Wi-Fi or Wireless adapters
   for (const name of Object.keys(nets)) {
-    for (const net of nets[name]) {
-      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-      if (net.family === "IPv4" && !net.internal) {
-        return net.address;
+    if (name.toLowerCase().includes('wi-fi') || name.toLowerCase().includes('wireless') || name.toLowerCase().includes('wlan') || name === 'en0') {
+      for (const net of nets[name]) {
+        if (net.family === "IPv4" && !net.internal) {
+          return net.address;
+        }
       }
     }
   }
+
+  // 2. Second Pass: If no Wi-Fi, look for anything that is NOT a virtual machine adapter
+  for (const name of Object.keys(nets)) {
+    const isVirtual = name.toLowerCase().includes('virtualbox') || 
+                      name.toLowerCase().includes('vmware') || 
+                      name.toLowerCase().includes('vethernet');
+    
+    if (!isVirtual) {
+      for (const net of nets[name]) {
+        if (net.family === "IPv4" && !net.internal) {
+          return net.address;
+        }
+      }
+    }
+  }
+
+  // Default fallback if everything else fails
   return "localhost";
 };
 
 const syncIp = () => {
   const ip = getLocalIp();
   const backendUrl = `http://${ip}:5001`;
-  const frontendEnvPath = path.join(__dirname, "../../frontend/.env.local");
+  const apiConfigPath = path.join(__dirname, "../../frontend/utils/apiConfig.js");
 
   console.log(`\n🔍 Detected Local IP: ${ip}`);
   console.log(`🌐 Backend will be reachable at: ${backendUrl}`);
 
-  let envContent = "";
-  if (fs.existsSync(frontendEnvPath)) {
-    envContent = fs.readFileSync(frontendEnvPath, "utf8");
+  let configContent = "";
+  if (fs.existsSync(apiConfigPath)) {
+    configContent = fs.readFileSync(apiConfigPath, "utf8");
   }
 
-  // Update or Add EXPO_PUBLIC_TUNNEL_URL (Reusing the name for 100% compatibility)
-  if (envContent.includes("EXPO_PUBLIC_TUNNEL_URL=")) {
-    envContent = envContent.replace(
-      /EXPO_PUBLIC_TUNNEL_URL=.*/,
-      `EXPO_PUBLIC_TUNNEL_URL=${backendUrl}`
+  // Bruteforce replace the literal string to bypass ALL Expo Environment variables permanently
+  if (configContent.includes("const TUNNEL_URL =")) {
+    configContent = configContent.replace(
+      /const TUNNEL_URL = \".*\";/,
+      `const TUNNEL_URL = "${backendUrl}";`
     );
-  } else {
-    envContent += `\nEXPO_PUBLIC_TUNNEL_URL=${backendUrl}\n`;
   }
 
-  fs.writeFileSync(frontendEnvPath, envContent.trim() + "\n");
-  console.log(`\n✅ Synced IP to Frontend: ${frontendEnvPath}`);
+  fs.writeFileSync(apiConfigPath, configContent);
+  console.log(`\n✅ Hardcoded True IP directly into: ${apiConfigPath}`);
   console.log(`💡 Your Phone and Computer must be on the SAME WI-FI for this to work! 100%!!!\n`);
 };
 

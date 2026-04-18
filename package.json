@@ -7,7 +7,7 @@
     "update:all": "npm run install:all && npm run update:all --prefix backend && npm run update:all --prefix frontend",
     "clean:all": "npx rimraf backend/node_modules frontend/node_modules && npm run install:all",
     "install:all": "npm install --prefix backend && npm install --prefix frontend",
-    "ports:clear": "npx kill-port 5001 8081 || true",
+    "ports:clear": "npx kill-port 5001 8081 4040 || true",
     "setup": "npm run install:all && npm run ip:sync --prefix backend",
     "dev:all": "concurrently \"npm run dev --prefix backend\" \"npm run tunnel --prefix frontend\"",
     "sdk:sync": "npm run update:project --prefix frontend",
