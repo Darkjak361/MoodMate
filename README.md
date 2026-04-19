@@ -12,6 +12,20 @@
 
 ---
 
+## 🌍 Production Cloud Deployment (Android & Web) 🚀✨
+
+MoodMate has been successfully migrated to a **Full Cloud-Native Architecture**. It is now independent of the local machine and accessible globally:
+
+*   **📱 Android Version**: Deployed as a standalone APK via EAS (Expo Application Services).
+*   **🌐 Web Version**: Deployed as a live production instance on **Vercel**.
+*   **🚀 Backend**: Live on **Render** (Oregon, US).
+*   **🛡️ Database**: High-availability cluster on **MongoDB Atlas** (AWS).
+
+> [!IMPORTANT]
+> **View the full [Master Deployment Guide](file:///c:/Users/Sulem/Desktop/Final_Capstone_Project_MoodMate/DEPLOYMENT.md) for detailed credentials and configuration instructions.**
+
+---
+
 ## 🏗️ 1. Industrial System Architecture
 ```mermaid
 graph TD
@@ -115,6 +129,29 @@ To ensure the demo is **1,000,000% Flawless**, follow this exact sequence:
 2.  `cd frontend`
 3.  **`npm run tunnel`** 🚀
 4.  **(Wait for the QR Code to appear! Localtunnel + Expo Tunnel will sync 100% automatically!)** ✅
+
+---
+
+## 🛠️ 7. Development Modes (Previous Workflows) 🌟✨
+
+Before switching to the full production APK, Estas commands were used to bridge the laptop to the world:
+
+### ☁️ **A. Cloud Development Mode (Remote DB)**
+Used when connecting the local frontend to the Cloud database while still debugging.
+*   **Command**: `npm run cloud` (in `backend/`)
+*   **Purpose**: Starts the server using MongoDB Atlas instead of Localhost.
+
+### 🏠 **B. Local Development Mode (Local DB)**
+Used for offline development on the same Wi-Fi network.
+*   **Command**: `npm run dev` (in `backend/`)
+*   **Purpose**: Fast, low-latency development on your own laptop.
+
+### 📱 **C. The "Expo Go" Bridge**
+The command used to view the app on a physical phone before the APK was built.
+*   **Command**: `npm run tunnel` (in `frontend/`)
+*   **Protocol**: Creates a secure bridge (Localtunnel) so your phone can "find" your laptop even on different Wi-Fi networks.
+
+---
 5.  **`NOTE: Best thing is open http://localhost:8081/ in the web browser, as it is the fastest and most reliable way to test the app. Also, if you have any issues running all of the commands, at all, for all of the MoodMate Project, while testing all of the App, Project, and so on, as well, right, kindly please feel free to ask Artificial Intelligence (AI) for help at all, anytime, like Antigravity, for example, as well.`**
 
 ---

@@ -13,6 +13,8 @@ const inspirationsData = require("./data/inspirations.json");
 const activitiesData = require("./data/activities.json");
 const Settings = require("./models/Settings");
 const { scheduleNotificationForUser } = require("./services/notificationService");
+const authenticateToken = require("./middleware/auth");
+const authController = require("./controllers/authController");
 
 const app = express();
 
@@ -70,6 +72,7 @@ process.on('unhandledRejection', (reason) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/mood", moodRoutes);
 app.use("/api/settings", settingsRoutes);
+app.delete("/api/user", authenticateToken, authController.deleteAccount);
 
 // --- 🛡️ CORE API ENDPOINTS ---
 app.get("/api/health", (req, res) => {

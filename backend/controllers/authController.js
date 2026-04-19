@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Settings = require("../models/Settings");
+const MoodEntry = require("../models/MoodEntry");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -124,5 +125,47 @@ exports.googleAuth = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const { password } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Shield: If user has a password (not social login), we MUST verify it
+    if (user.password) {
+      if (!password) {
+        return res.status(400).json({ error: "Password is required to delete account" });
+      }
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(401).json({ error: "Invalid password. Account deletion aborted." });
+      }
+    }
+
+    console.log(`🗑️ [Cleanup] Deleting data for user: ${userId}`);
+
+    // 1. Delete Mood History
+    const moodResult = await MoodEntry.deleteMany({ userId });
+    console.log(`📉 Deleted ${moodResult.deletedCount} mood entries.`);
+
+    // 2. Delete Settings
+    await Settings.deleteOne({ userId });
+    console.log(`⚙️ Deleted user settings.`);
+
+    // 3. Delete User Profile
+    await User.findByIdAndDelete(userId);
+    console.log(`👤 Deleted user account: ${user.email}`);
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("❌ Delete Account Error:", error);
+    res.status(500).json({ error: "Internal server error during account deletion" });
   }
 };
