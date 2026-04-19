@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Alert, Platform } from "react-native";
+import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Alert, Platform, Modal, TextInput } from "react-native";
 /* apologies this is being all done, even though it 
 wasn't explicity mentioned in the certain assessments (i.e. 
 revised project proposal, and so on), but our group wanted 
@@ -18,6 +18,9 @@ export default function ProfileScreen() {
     const [notifications, setNotifications] = useState(false);
     const [settingsLoaded, setSettingsLoaded] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const { user, logout } = useAuth();
     const { theme, toggleTheme, setTheme } = useTheme();
@@ -103,9 +106,15 @@ export default function ProfileScreen() {
         }
     };
 
-    const handleDeleteAccount = async (password) => {
+    const handleDeleteAccount = async () => {
+        if (!confirmPassword) {
+            showAlert("Error", "Please enter your password to confirm.");
+            return;
+        }
+
+        setIsDeleting(true);
         try {
-            const result = await deleteUser(password);
+            await deleteUser(confirmPassword);
 
             if (Platform.OS === "web") {
                 if (window.moodmateTimer) {
@@ -117,14 +126,19 @@ export default function ProfileScreen() {
             setTheme("light");
             await AsyncStorage.removeItem("userTheme");
 
+            setIsPasswordModalVisible(false);
+            setConfirmPassword("");
+            
             showAlert("Success", "Your account has been deleted successfully. Remember to create a new account and then login with your new account to continue using MoodMate.");
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 800));
 
             await logout();
             router.replace("/login");
         } catch (error) {
-            const errorMessage = error.message || "Failed to delete account. Please try again.";
+            const errorMessage = error.message || "Incorrect password. Account was NOT deleted.";
             showAlert("Error", errorMessage);
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -426,32 +440,69 @@ export default function ProfileScreen() {
                 <Text style={[styles.cardTitle, { color: activeColors.text }]}>Account</Text>
                 <TouchableOpacity
                     style={[styles.deleteAccountButton, { backgroundColor: activeColors.error, borderColor: activeColors.border }]}
-                    onPress={() => {
-                        if (Platform.OS === "web") {
-                            const pwd = window.prompt("Are you sure you want to permanently delete your account and everything with it? This action cannot be undone. To delete your account, please enter your password to confirm:");
-                            if (pwd) {
-                                handleDeleteAccount(pwd);
-                            }
-                        } else {
-                            Alert.prompt(
-                                "Confirm Password",
-                                "Are you sure you want to permanently delete your account and everything with it? This action cannot be undone. To delete your account, please enter your password to confirm:",
-                                [
-                                    { text: "Cancel", style: "cancel" },
-                                    {
-                                        text: "Confirm", style: "destructive", onPress: (pwd) => {
-                                            if (pwd) handleDeleteAccount(pwd);
-                                        }
-                                    }
-                                ],
-                                "secure-text"
-                            );
-                        }
-                    }}
+                    onPress={() => setIsPasswordModalVisible(true)}
                 >
                     <Text style={[styles.deleteAccountText, { color: activeColors.background }]}>Delete Account</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* 🛡️ 1,000,000% Professional Cross-Platform Delete Confirmation Modal! */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isPasswordModalVisible}
+                onRequestClose={() => setIsPasswordModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={[styles.modalContent, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
+                        <View style={styles.modalHeader}>
+                            <Ionicons name="warning" size={32} color={activeColors.error} />
+                            <Text style={[styles.modalTitle, { color: activeColors.text }]}>Delete Account?</Text>
+                        </View>
+                        
+                        <Text style={[styles.modalDescription, { color: activeColors.secondary }]}>
+                            This action is permanent and cannot be undone. All your mood history, insights, and settings will be wiped forever.
+                        </Text>
+
+                        <View style={styles.inputContainer}>
+                            <Text style={[styles.inputLabel, { color: activeColors.text }]}>Confirm with Password:</Text>
+                            <TextInput
+                                style={[styles.passwordInput, { 
+                                    backgroundColor: activeColors.background, 
+                                    color: activeColors.text,
+                                    borderColor: activeColors.border 
+                                }]}
+                                placeholder="Enter password"
+                                placeholderTextColor={activeColors.secondary}
+                                secureTextEntry
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                            />
+                        </View>
+
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity 
+                                style={[styles.cancelBtn, { borderColor: activeColors.border }]} 
+                                onPress={() => {
+                                    setIsPasswordModalVisible(false);
+                                    setConfirmPassword("");
+                                }}
+                            >
+                                <Text style={[styles.cancelBtnText, { color: activeColors.text }]}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={[styles.deleteBtn, { backgroundColor: activeColors.error }]} 
+                                onPress={handleDeleteAccount}
+                                disabled={isDeleting}
+                            >
+                                <Text style={styles.deleteBtnText}>
+                                    {isDeleting ? "Deleting..." : "Delete Forever"}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
         </ScrollView>
     );
@@ -706,5 +757,79 @@ const styles = StyleSheet.create({
     confirmButtonTextYes: {
         fontSize: 16,
         fontWeight: "600",
+    },
+    // --- 🛡️ MODAL STYLES ---
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+    modalContent: {
+        width: "100%",
+        maxWidth: 400,
+        padding: 25,
+        borderRadius: 20,
+        borderWidth: 1.5,
+        ...Platform.select({
+            web: { boxShadow: "0px 4px 15px rgba(0,0,0,0.2)" },
+            default: { elevation: 10 }
+        })
+    },
+    modalHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 15,
+        gap: 10,
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+    },
+    modalDescription: {
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: 20,
+    },
+    inputContainer: {
+        marginBottom: 20,
+    },
+    inputLabel: {
+        fontSize: 14,
+        fontWeight: "600",
+        marginBottom: 8,
+    },
+    passwordInput: {
+        padding: 12,
+        borderRadius: 10,
+        borderWidth: 1.5,
+        fontSize: 16,
+    },
+    modalButtons: {
+        flexDirection: "row",
+        gap: 12,
+    },
+    cancelBtn: {
+        flex: 1,
+        padding: 15,
+        borderRadius: 10,
+        alignItems: "center",
+        borderWidth: 1.5,
+    },
+    cancelBtnText: {
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    deleteBtn: {
+        flex: 1,
+        padding: 15,
+        borderRadius: 10,
+        alignItems: "center",
+    },
+    deleteBtnText: {
+        color: "#FFFFFF",
+        fontSize: 16,
+        fontWeight: "bold",
     },
 });

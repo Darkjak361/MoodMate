@@ -12,6 +12,7 @@
     "cloud": "node ./scripts/cloud-bridge.js",
     "generate-certs": "node generate-certs.js",
     "ip:sync": "node ./scripts/sync-ip.js",
+    "tunnel:stable": "node ./scripts/bridge-ngrok.js",
     "update:all": "npm update && npm install"
   },
   "dependencies": {

@@ -135,18 +135,27 @@ exports.deleteAccount = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
+      console.log(`❌ [Delete] User not found: ${userId}`);
       return res.status(404).json({ error: "User not found" });
     }
+
+    console.log(`🔍 [Delete] Processing request for: ${user.email} (ID: ${userId})`);
 
     // Shield: If user has a password (not social login), we MUST verify it
     if (user.password) {
       if (!password) {
+        console.log(`⚠️ [Delete] Missing password for user: ${user.email}`);
         return res.status(400).json({ error: "Password is required to delete account" });
       }
+      
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
+        console.log(`🚫 [Delete] Password mismatch for user: ${user.email}`);
         return res.status(401).json({ error: "Incorrect password. Account was NOT deleted." });
       }
+      console.log(`✅ [Delete] Password verified for user: ${user.email}`);
+    } else {
+      console.log(`🌐 [Delete] Social login detected (no password required) for user: ${user.email}`);
     }
 
     console.log(`🗑️ [Cleanup] Deleting data for user: ${userId}`);
