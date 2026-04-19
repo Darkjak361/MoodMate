@@ -147,6 +147,7 @@ exports.deleteAccount = async (req, res) => {
       if (!validPassword) {
         return res.status(401).json({ error: "Incorrect password. Account was NOT deleted." });
       }
+    }
 
     console.log(`🗑️ [Cleanup] Deleting data for user: ${userId}`);
 
