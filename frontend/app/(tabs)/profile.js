@@ -18,7 +18,6 @@ export default function ProfileScreen() {
     const [notifications, setNotifications] = useState(false);
     const [settingsLoaded, setSettingsLoaded] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [settingsLoaded, setSettingsLoaded] = useState(false);
 
     const { user, logout } = useAuth();
     const { theme, toggleTheme, setTheme } = useTheme();
