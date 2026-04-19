@@ -145,9 +145,8 @@ exports.deleteAccount = async (req, res) => {
       }
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
-        return res.status(401).json({ error: "Invalid password. Account deletion aborted." });
+        return res.status(401).json({ error: "Incorrect password. Account was NOT deleted." });
       }
-    }
 
     console.log(`🗑️ [Cleanup] Deleting data for user: ${userId}`);
 

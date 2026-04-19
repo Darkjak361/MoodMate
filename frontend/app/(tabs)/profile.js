@@ -390,7 +390,7 @@ export default function ProfileScreen() {
                         <Text style={[styles.confirmTitle, { color: activeColors.text }]}>Enable Reminders?</Text>
                         <Text style={[styles.confirmText, { color: activeColors.secondary }]}>
                             Enable daily check-in notifications to help track your well-being.
-                            {"\n\n"}Note: Notifications are only optimized for web right now in this version.
+                            {"\n\n"}Note: Notifications are only optimized for all iOS / Android Mobile Devices. Press 'Yes' multiple times for 100% consistency. Keep multiple device reminders for 100% awareness and never miss notifications!
                         </Text>
                         <View style={styles.confirmButtons}>
                             <TouchableOpacity style={[styles.confirmButtonNo, { backgroundColor: activeColors.card, borderColor: activeColors.border }]} onPress={handleConfirmNo}>
