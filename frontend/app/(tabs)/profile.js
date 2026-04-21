@@ -9,16 +9,18 @@ import { getSettings, updateSettings, deleteUser } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 
-// Foreground notification display config
-try {
-    Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: true,
-        }),
-    });
-} catch (e) {}
+// Foreground notification display config (only for mobile)
+if (Platform.OS !== "web") {
+    try {
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: true,
+                shouldSetBadge: true,
+            }),
+        });
+    } catch (e) { }
+}
 
 export default function ProfileScreen() {
     const [notifications, setNotifications] = useState(false);
@@ -52,82 +54,50 @@ export default function ProfileScreen() {
         }
     };
 
+    // Mobile-only notification functions
     const enableNotifications = async () => {
+        if (Platform.OS === "web") return false;
+
         try {
             const hour = 9;
             const minute = 0;
 
-            if (Platform.OS === "web") {
-                if (!("Notification" in window)) {
-                    showAlert("Error", "Your browser does not support notifications");
-                    return false;
-                }
-                const permission = await window.Notification.requestPermission();
-                if (permission !== "granted") {
-                    showAlert("Permission Required", "Please allow notifications in your browser.");
-                    return false;
-                }
-                if (window.moodmateTimer) clearTimeout(window.moodmateTimer);
-                const now = new Date();
-                const nextTrigger = new Date();
-                nextTrigger.setHours(hour, minute, 0, 0);
-                if (nextTrigger <= now) nextTrigger.setDate(nextTrigger.getDate() + 1);
-                const msUntilNext = nextTrigger.getTime() - now.getTime();
-                try {
-                    new Notification("✅ Notifications Enabled!", {
-                        body: "You're all set! You will receive daily MoodMate reminders.",
-                        icon: "/icon.png",
-                    });
-                } catch (e) {}
-                showAlert("✅ Success", "Daily reminders are now scheduled for 9:00 AM every day!");
-                window.moodmateTimer = setTimeout(function sendDailyWebNotification() {
-                    new Notification("MoodMate Reminder", {
-                        body: "Time to check in with your mood! How are you feeling today?",
-                        icon: "/icon.png",
-                    });
-                    window.moodmateTimer = setTimeout(sendDailyWebNotification, 24 * 60 * 60 * 1000);
-                }, msUntilNext);
-            } else {
-                // 📱 Mobile
-                const { status: existingStatus } = await Notifications.getPermissionsAsync();
-                let finalStatus = existingStatus;
-                if (existingStatus !== 'granted') {
-                    const { status } = await Notifications.requestPermissionsAsync();
-                    finalStatus = status;
-                }
-                if (finalStatus !== 'granted') {
-                    showAlert("Permission Required", "⚠️ Please ensure app notifications are allowed in system settings.");
-                    return false;
-                }
-                await Notifications.cancelAllScheduledNotificationsAsync();
-                // Immediate confirmation notification (fires after 2s)
-                setTimeout(async () => {
-                    try {
-                        await Notifications.scheduleNotificationAsync({
-                            content: {
-                                title: "MoodMate Reminder",
-                                body: "Time to check in with your mood! How are you feeling today?",
-                                sound: true,
-                                priority: 'max',
-                                vibrate: [0, 250, 250, 250],
-                            },
-                            trigger: null,
-                        });
-                    } catch (e) { console.warn("Confirmation notification failed:", e); }
-                }, 2000);
-                // Daily 9:00 AM recurring notification
+            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const { status } = await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                showAlert("Permission Required", "⚠️ Please ensure app notifications are allowed in system settings.");
+                return false;
+            }
+            await Notifications.cancelAllScheduledNotificationsAsync();
+            setTimeout(async () => {
                 try {
                     await Notifications.scheduleNotificationAsync({
                         content: {
                             title: "MoodMate Reminder",
                             body: "Time to check in with your mood! How are you feeling today?",
                             sound: true,
+                            priority: 'max',
+                            vibrate: [0, 250, 250, 250],
                         },
-                        trigger: { hour, minute, repeats: true },
+                        trigger: null,
                     });
-                } catch (e) {
-                    console.warn("Exact scheduling blocked, using JS fallback.");
-                }
+                } catch (e) { console.warn("Confirmation notification failed:", e); }
+            }, 2000);
+            try {
+                await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "MoodMate Reminder",
+                        body: "Time to check in with your mood! How are you feeling today?",
+                        sound: true,
+                    },
+                    trigger: { hour, minute, repeats: true },
+                });
+            } catch (e) {
+                console.warn("Exact scheduling blocked, using JS fallback.");
             }
             await updateSettings({ dailyReminders: true, notificationHour: hour, notificationMinute: minute });
             setNotifications(true);
@@ -141,15 +111,10 @@ export default function ProfileScreen() {
     };
 
     const disableNotifications = async () => {
+        if (Platform.OS === "web") return;
+
         try {
-            if (Platform.OS === "web") {
-                if (window.moodmateTimer) {
-                    clearTimeout(window.moodmateTimer);
-                    window.moodmateTimer = null;
-                }
-            } else {
-                await Notifications.cancelAllScheduledNotificationsAsync();
-            }
+            await Notifications.cancelAllScheduledNotificationsAsync();
             await updateSettings({ dailyReminders: false });
             setNotifications(false);
         } catch (error) {
@@ -175,6 +140,8 @@ export default function ProfileScreen() {
     }, []);
 
     const handleNotificationToggle = async (value) => {
+        if (Platform.OS === "web") return;
+
         if (!value) {
             setShowConfirmModal(false);
             await disableNotifications();
@@ -190,17 +157,17 @@ export default function ProfileScreen() {
     };
 
     const handleConfirmYes = async () => {
+        if (Platform.OS === "web") return;
         await enableNotifications();
+
     };
 
+
     const handleConfirmNo = async () => {
+        if (Platform.OS === "web") return;
         setShowConfirmModal(false);
         setNotifications(false);
         try {
-            if (Platform.OS === "web" && window.moodmateTimer) {
-                clearTimeout(window.moodmateTimer);
-                window.moodmateTimer = null;
-            }
             await updateSettings({ dailyReminders: false });
         } catch (error) {
             console.error("Failed to update settings:", error);
@@ -244,7 +211,9 @@ export default function ProfileScreen() {
         setIsDeleting(true);
         try {
             await deleteUser(passwordToUse);
-            await disableNotifications();
+            if (Platform.OS !== "web") {
+                await disableNotifications();
+            }
             setTheme("light");
             await AsyncStorage.removeItem("userTheme");
             setIsAndroidPasswordModalVisible(false);
@@ -298,34 +267,49 @@ export default function ProfileScreen() {
                     />
                 </View>
 
-                <View style={styles.settingRow}>
-                    <View>
-                        <Text style={[styles.settingLabel, { color: activeColors.text }]}>Reminder(s)</Text>
-                        <Text style={[styles.settingDescription, { color: activeColors.secondary }]}>Get notified to check in with your mood.</Text>
-                    </View>
-                    <Switch
-                        value={notifications}
-                        onValueChange={handleNotificationToggle}
-                        trackColor={{ false: activeColors.border, true: activeColors.tint }}
-                        thumbColor={notifications ? activeColors.tint : activeColors.background}
-                    />
-                </View>
-
-                {showConfirmModal && (
-                    <View style={[styles.confirmBox, { borderTopColor: activeColors.border }]}>
-                        <Text style={[styles.confirmTitle, { color: activeColors.text }]}>Enable Reminders?</Text>
-                        <Text style={[styles.confirmText, { color: activeColors.secondary }]}>
-                            Enable daily check-in notifications to help track your well-being.
-                            {"\n\n"}Note: Notifications are only optimized for all iOS / Android Mobile Devices. Press 'Yes' multiple times for 100% consistency. Keep multiple device reminders for 100% awareness and never miss notifications!
-                        </Text>
-                        <View style={styles.confirmButtons}>
-                            <TouchableOpacity style={[styles.confirmButtonNo, { backgroundColor: activeColors.card, borderColor: activeColors.border }]} onPress={handleConfirmNo}>
-                                <Text style={[styles.confirmButtonTextNo, { color: activeColors.text }]}>No</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.confirmButtonYes, { backgroundColor: activeColors.success, borderColor: activeColors.border }]} onPress={handleConfirmYes}>
-                                <Text style={[styles.confirmButtonTextYes, { color: activeColors.background }]}>Yes</Text>
-                            </TouchableOpacity>
+                {/* Reminder section - ONLY SHOWN ON MOBILE (iOS/Android), HIDDEN ON WEB */}
+                {Platform.OS !== "web" && (
+                    <>
+                        <View style={styles.settingRow}>
+                            <View>
+                                <Text style={[styles.settingLabel, { color: activeColors.text }]}>Reminder(s)</Text>
+                                <Text style={[styles.settingDescription, { color: activeColors.secondary }]}>Get notified to check in with your mood.</Text>
+                            </View>
+                            <Switch
+                                value={notifications}
+                                onValueChange={handleNotificationToggle}
+                                trackColor={{ false: activeColors.border, true: activeColors.tint }}
+                                thumbColor={notifications ? activeColors.tint : activeColors.background}
+                            />
                         </View>
+
+                        {/* ✅ CHANGE 3: Replaced showConfirmModal with (notifications || showConfirmModal) */}
+                        {(notifications || showConfirmModal) && (
+                            <View style={[styles.confirmBox, { borderTopColor: activeColors.border }]}>
+                                <Text style={[styles.confirmTitle, { color: activeColors.text }]}>Enable Reminders?</Text>
+                                <Text style={[styles.confirmText, { color: activeColors.secondary }]}>
+                                    Enable daily check-in notifications to help track your well-being.
+                                    {"\n\n"}Note: Notifications are only optimized for all iOS / Android Mobile Devices. Press 'Yes' multiple times for 100% consistency. Keep multiple device reminders for 100% awareness and never miss notifications!
+                                </Text>
+                                <View style={styles.confirmButtons}>
+                                    <TouchableOpacity style={[styles.confirmButtonNo, { backgroundColor: activeColors.card, borderColor: activeColors.border }]} onPress={handleConfirmNo}>
+                                        <Text style={[styles.confirmButtonTextNo, { color: activeColors.text }]}>No</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={[styles.confirmButtonYes, { backgroundColor: activeColors.success, borderColor: activeColors.border }]} onPress={handleConfirmYes}>
+                                        <Text style={[styles.confirmButtonTextYes, { color: activeColors.background }]}>Yes</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        )}
+                    </>
+                )}
+
+                {/* Web-only message */}
+                {Platform.OS === "web" && (
+                    <View style={styles.noteBox}>
+                        <Text style={[styles.noteText, { color: activeColors.secondary }]}>
+                            💡 Note: Daily reminders are available on the mobile app (iOS/Android). Download the app to enable push notifications!
+                        </Text>
                     </View>
                 )}
             </View>
@@ -428,8 +412,8 @@ const styles = StyleSheet.create({
     settingRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 10 },
     settingLabel: { fontSize: 16, fontWeight: "600" },
     settingDescription: { fontSize: 12, marginTop: 3 },
-    testButton: { padding: 12, borderRadius: 10, alignItems: "center", marginTop: 10 },
-    testButtonText: { fontSize: 14, fontWeight: "600" },
+    noteBox: { marginTop: 15, paddingTop: 15, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' },
+    noteText: { fontSize: 12, fontStyle: "italic", lineHeight: 16 },
     confirmBox: { marginTop: 20, paddingTop: 20, borderTopWidth: 1.5 },
     confirmTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 12 },
     confirmText: { fontSize: 13, lineHeight: 18, marginBottom: 15 },
