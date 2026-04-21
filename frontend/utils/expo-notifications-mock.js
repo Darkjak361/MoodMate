@@ -15,6 +15,8 @@ export const dismissAllNotificationsAsync = async () => {};
 export const dismissNotificationAsync = async () => {};
 export const setBadgeCountAsync = async () => {};
 export const getBadgeCountAsync = async () => 0;
+export const requestPermissionsAsync = async () => ({ status: 'granted', granted: true, canAskAgain: true, expires: 'never' });
+export const getPermissionsAsync = async () => ({ status: 'granted', granted: true, canAskAgain: true, expires: 'never' });
 
 export default {
     getRegistrationInfoAsync,

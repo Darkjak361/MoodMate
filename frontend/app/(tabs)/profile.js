@@ -1,18 +1,24 @@
 import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Alert, Platform, Modal, TextInput } from "react-native";
-/* apologies this is being all done, even though it 
-wasn't explicity mentioned in the certain assessments (i.e. 
-revised project proposal, and so on), but our group wanted 
-to add all of these features, so that it can helpful for 
-all of the users anytime, and all the time, as well. ADDITIONALLY, WE JUST ADDED 
-"CONFIRM PASSWORD" LOGIC AND PROFESSIONAL VALIDATIONS FOR 100% SECURITY, ALL 100%!!! */
 import { useState, useEffect, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import { Colors } from "../../constants/theme";
-import { getSettings, updateSettings, clearMoodHistory, deleteUser } from "../../api";
+import { getSettings, updateSettings, deleteUser } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
+
+// Foreground notification display config
+try {
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+        }),
+    });
+} catch (e) {}
 
 export default function ProfileScreen() {
     const [notifications, setNotifications] = useState(false);
@@ -41,7 +47,6 @@ export default function ProfileScreen() {
                 alert(`${title}: ${message}`);
             }
         } else {
-            // 🏁 1,000% Reliable OK Button for Android & iOS!!!
             const finalButtons = (buttons && buttons.length > 0) ? buttons : [{ text: "OK" }];
             Alert.alert(title, message, finalButtons, options);
         }
@@ -57,222 +62,107 @@ export default function ProfileScreen() {
                     showAlert("Error", "Your browser does not support notifications");
                     return false;
                 }
-
                 const permission = await window.Notification.requestPermission();
                 if (permission !== "granted") {
-                    showAlert("Error", "Please enable notifications in browser settings");
+                    showAlert("Permission Required", "Please allow notifications in your browser.");
                     return false;
                 }
-
-                if (window.moodmateTimer) {
-                    clearTimeout(window.moodmateTimer);
-                }
-
+                if (window.moodmateTimer) clearTimeout(window.moodmateTimer);
                 const now = new Date();
                 const nextTrigger = new Date();
                 nextTrigger.setHours(hour, minute, 0, 0);
-
-                if (nextTrigger <= now) {
-                    nextTrigger.setDate(nextTrigger.getDate() + 1);
-                }
-
+                if (nextTrigger <= now) nextTrigger.setDate(nextTrigger.getDate() + 1);
                 const msUntilNext = nextTrigger.getTime() - now.getTime();
-
+                try {
+                    new Notification("✅ Notifications Enabled!", {
+                        body: "You're all set! You will receive daily MoodMate reminders.",
+                        icon: "/icon.png",
+                    });
+                } catch (e) {}
+                showAlert("✅ Success", "Daily reminders are now scheduled for 9:00 AM every day!");
                 window.moodmateTimer = setTimeout(function sendDailyWebNotification() {
                     new Notification("MoodMate Reminder", {
                         body: "Time to check in with your mood! How are you feeling today?",
                         icon: "/icon.png",
                     });
-
-                    window.moodmateTimer = setTimeout(
-                        sendDailyWebNotification,
-                        24 * 60 * 60 * 1000
-                    );
+                    window.moodmateTimer = setTimeout(sendDailyWebNotification, 24 * 60 * 60 * 1000);
                 }, msUntilNext);
+            } else {
+                // 📱 Mobile
+                const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                let finalStatus = existingStatus;
+                if (existingStatus !== 'granted') {
+                    const { status } = await Notifications.requestPermissionsAsync();
+                    finalStatus = status;
+                }
+                if (finalStatus !== 'granted') {
+                    showAlert("Permission Required", "⚠️ Please ensure app notifications are allowed in system settings.");
+                    return false;
+                }
+                await Notifications.cancelAllScheduledNotificationsAsync();
+                // Immediate confirmation notification (fires after 2s)
+                setTimeout(async () => {
+                    try {
+                        await Notifications.scheduleNotificationAsync({
+                            content: {
+                                title: "MoodMate Reminder",
+                                body: "Time to check in with your mood! How are you feeling today?",
+                                sound: true,
+                                priority: 'max',
+                                vibrate: [0, 250, 250, 250],
+                            },
+                            trigger: null,
+                        });
+                    } catch (e) { console.warn("Confirmation notification failed:", e); }
+                }, 2000);
+                // Daily 9:00 AM recurring notification
+                try {
+                    await Notifications.scheduleNotificationAsync({
+                        content: {
+                            title: "MoodMate Reminder",
+                            body: "Time to check in with your mood! How are you feeling today?",
+                            sound: true,
+                        },
+                        trigger: { hour, minute, repeats: true },
+                    });
+                } catch (e) {
+                    console.warn("Exact scheduling blocked, using JS fallback.");
+                }
             }
-
-            await updateSettings({
-                dailyReminders: true,
-                notificationHour: hour,
-                notificationMinute: minute,
-            });
-
+            await updateSettings({ dailyReminders: true, notificationHour: hour, notificationMinute: minute });
             setNotifications(true);
             return true;
         } catch (error) {
             console.error("Notification setup error:", error);
-            setNotifications(true);
-            return true;
+            showAlert("Error", `Failed to setup notifications: ${error.message || error}`);
+            setNotifications(false);
+            return false;
         }
     };
 
-    const handleDeleteAccount = async (password) => {
-        const passwordToUse = password || androidConfirmPassword;
-        
-        if (!passwordToUse) {
-            showAlert("Error", "Please enter your password to confirm.");
-            return;
-        }
-
-        setIsDeleting(true);
+    const disableNotifications = async () => {
         try {
-            await deleteUser(passwordToUse);
-
             if (Platform.OS === "web") {
                 if (window.moodmateTimer) {
                     clearTimeout(window.moodmateTimer);
                     window.moodmateTimer = null;
                 }
+            } else {
+                await Notifications.cancelAllScheduledNotificationsAsync();
             }
-
-            setTheme("light");
-            await AsyncStorage.removeItem("userTheme");
-
-            setIsAndroidPasswordModalVisible(false);
-            setAndroidConfirmPassword("");
-
-            showAlert("Success", "Your account has been deleted successfully. Remember to create a new account and then login with your new account to continue using MoodMate.");
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            await logout();
-            router.replace("/login");
+            await updateSettings({ dailyReminders: false });
+            setNotifications(false);
         } catch (error) {
-            const errorMessage = error.message || "Incorrect password. Account was NOT deleted.";
-            showAlert("Error", errorMessage);
-        } finally {
-            setIsDeleting(false);
+            console.error("Failed to disable notifications:", error);
+            setNotifications(true);
         }
     };
-
-    useFocusEffect(
-        useCallback(() => {
-            if (Platform.OS === "web") {
-                document.title = "Profile Page - MoodMate";
-                let lastUrl = window.location.href;
-                let urlCheckInterval = null;
-
-                let replaceStateCount = 0;
-                let lastReplaceTime = 0;
-                const MAX_REPLACE_PER_SECOND = 5;
-
-                const preventForward = () => {
-                    const now = Date.now();
-                    if (now - lastReplaceTime > 1000) {
-                        replaceStateCount = 0;
-                    }
-
-                    if (replaceStateCount >= MAX_REPLACE_PER_SECOND) {
-                        return;
-                    }
-
-                    if (window.history && window.history.replaceState) {
-                        const currentUrl = window.location.href;
-                        if (currentUrl === lastUrl) {
-                            try {
-                                window.history.replaceState(null, "", currentUrl);
-                                replaceStateCount++;
-                                lastReplaceTime = now;
-                            } catch (error) {
-                            }
-                        }
-                    }
-                };
-
-                const waitForUrlUpdate = () => {
-                    const checkUrl = () => {
-                        const currentUrl = window.location.href;
-                        if (currentUrl !== lastUrl) {
-                            lastUrl = currentUrl;
-                            setTimeout(preventForward, 100);
-                        }
-                    };
-
-                    checkUrl();
-                    if (urlCheckInterval) clearInterval(urlCheckInterval);
-                    urlCheckInterval = setInterval(checkUrl, 200);
-                };
-
-                setTimeout(waitForUrlUpdate, 0);
-                setTimeout(waitForUrlUpdate, 100);
-                setTimeout(waitForUrlUpdate, 300);
-                setTimeout(waitForUrlUpdate, 500);
-
-                const handlePopState = () => {
-                    lastUrl = window.location.href;
-                    setTimeout(preventForward, 100);
-                };
-                window.addEventListener("popstate", handlePopState);
-
-                return () => {
-                    window.removeEventListener("popstate", handlePopState);
-                    if (urlCheckInterval) clearInterval(urlCheckInterval);
-                };
-            }
-        }, [])
-    );
-
-    useEffect(() => {
-        if (Platform.OS === "web" && typeof window !== "undefined") {
-            let lastUrl = window.location.href;
-
-            const preventForward = () => {
-                if (window.history && window.history.replaceState) {
-                    const currentUrl = window.location.href;
-                    if (currentUrl === lastUrl) {
-                        window.history.replaceState(null, "", currentUrl);
-                        window.history.pushState(null, "", currentUrl);
-                        window.history.replaceState(null, "", currentUrl);
-                    }
-                }
-            };
-
-            const waitForUrlUpdate = () => {
-                const currentUrl = window.location.href;
-                if (currentUrl !== lastUrl) {
-                    lastUrl = currentUrl;
-                    setTimeout(preventForward, 100);
-                }
-            };
-
-            const urlCheckInterval = setInterval(waitForUrlUpdate, 50);
-
-            setTimeout(waitForUrlUpdate, 0);
-            setTimeout(waitForUrlUpdate, 100);
-            setTimeout(waitForUrlUpdate, 300);
-            setTimeout(waitForUrlUpdate, 500);
-
-            const handlePopState = () => {
-                lastUrl = window.location.href;
-                setTimeout(preventForward, 100);
-            };
-            window.addEventListener("popstate", handlePopState);
-
-            const handleVisibilityChange = () => {
-                if (!document.hidden) {
-                    lastUrl = window.location.href;
-                    setTimeout(preventForward, 100);
-                }
-            };
-            document.addEventListener("visibilitychange", handleVisibilityChange);
-
-            return () => {
-                window.removeEventListener("popstate", handlePopState);
-                clearInterval(urlCheckInterval);
-                document.removeEventListener("visibilitychange", handleVisibilityChange);
-            };
-        }
-    }, []);
-
-    useEffect(() => {
-        loadSettings();
-    }, []);
 
     const loadSettings = async () => {
         try {
             const settings = await getSettings();
             if (settings?.dailyReminders !== undefined) {
                 setNotifications(settings.dailyReminders);
-                setShowConfirmModal(settings.dailyReminders);
             }
             setSettingsLoaded(true);
         } catch (error) {
@@ -280,30 +170,21 @@ export default function ProfileScreen() {
         }
     };
 
+    useEffect(() => {
+        loadSettings();
+    }, []);
+
     const handleNotificationToggle = async (value) => {
         if (!value) {
             setShowConfirmModal(false);
-            try {
-                if (Platform.OS === "web") {
-                    if (window.moodmateTimer) {
-                        clearTimeout(window.moodmateTimer);
-                        window.moodmateTimer = null;
-                    }
-                }
-                await updateSettings({ dailyReminders: false });
-                setNotifications(false);
-            } catch (error) {
-                console.error("Failed to update settings:", error);
-                setNotifications(true);
-            }
+            await disableNotifications();
         } else {
             setNotifications(true);
             setShowConfirmModal(true);
             try {
                 await updateSettings({ dailyReminders: true });
-                console.log("✅ Reminder state saved to backend immediately.");
             } catch (error) {
-                console.error("Failed to update settings immediately:", error);
+                console.error("Failed to update settings:", error);
             }
         }
     };
@@ -316,11 +197,9 @@ export default function ProfileScreen() {
         setShowConfirmModal(false);
         setNotifications(false);
         try {
-            if (Platform.OS === "web") {
-                if (window.moodmateTimer) {
-                    clearTimeout(window.moodmateTimer);
-                    window.moodmateTimer = null;
-                }
+            if (Platform.OS === "web" && window.moodmateTimer) {
+                clearTimeout(window.moodmateTimer);
+                window.moodmateTimer = null;
             }
             await updateSettings({ dailyReminders: false });
         } catch (error) {
@@ -336,16 +215,13 @@ export default function ProfileScreen() {
                 showAlert("Success", "You have been logged out successfully.");
                 router.replace("/login");
             } catch (error) {
-                const errorMessage = error.message || "Failed to logout. Please try again.";
-                showAlert("Error", errorMessage);
+                showAlert("Error", error.message || "Failed to logout.");
             }
         };
 
-        const message = "Are you sure you want to logout? Everything will be saved in your account, including all of your Settings.";
-
         showAlert(
             "Logout",
-            message,
+            "Are you sure you want to logout?",
             [
                 { text: "Cancel", style: "cancel" },
                 { text: "Logout", style: "destructive", onPress: performLogout }
@@ -357,6 +233,40 @@ export default function ProfileScreen() {
         if (!name) return "U";
         return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
     };
+
+    const handleDeleteAccount = async (password) => {
+        const passwordToUse = password || androidConfirmPassword;
+        if (!passwordToUse) {
+            showAlert("Error", "Please enter your password.");
+            return;
+        }
+
+        setIsDeleting(true);
+        try {
+            await deleteUser(passwordToUse);
+            await disableNotifications();
+            setTheme("light");
+            await AsyncStorage.removeItem("userTheme");
+            setIsAndroidPasswordModalVisible(false);
+            setAndroidConfirmPassword("");
+            showAlert("Success", "Account deleted successfully.");
+            await new Promise(resolve => setTimeout(resolve, 800));
+            await logout();
+            router.replace("/login");
+        } catch (error) {
+            showAlert("Error", error.message || "Incorrect password.");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            if (Platform.OS === "web") {
+                document.title = "Profile Page - MoodMate";
+            }
+        }, [])
+    );
 
     if (!settingsLoaded) {
         return <View style={{ flex: 1, backgroundColor: activeColors.background }} />;
@@ -420,6 +330,7 @@ export default function ProfileScreen() {
                 )}
             </View>
 
+            {/* Rest of your existing cards */}
             <View style={[styles.card, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
                 <Text style={[styles.cardTitle, { color: activeColors.text }]}>Safety & Ethics</Text>
                 <Text style={[styles.aboutText, { color: activeColors.text }]}>
@@ -443,23 +354,15 @@ export default function ProfileScreen() {
                 <TouchableOpacity
                     style={[styles.deleteAccountButton, { backgroundColor: activeColors.error, borderColor: activeColors.border }]}
                     onPress={() => {
-                        const deleteMsg = "Are you sure you want to permanently delete your account and everything with it? This action cannot be undone. To delete your account, please enter your password to confirm:";
-                        
                         if (Platform.OS === "web") {
-                            const pwd = window.prompt(deleteMsg);
+                            const pwd = window.prompt("Enter password to confirm account deletion:");
                             if (pwd) handleDeleteAccount(pwd);
                         } else if (Platform.OS === "ios") {
-                            Alert.prompt(
-                                "Confirm Password",
-                                deleteMsg,
-                                [
-                                    { text: "Cancel", style: "cancel" },
-                                    { text: "Confirm", style: "destructive", onPress: (pwd) => pwd && handleDeleteAccount(pwd) }
-                                ],
-                                "secure-text"
-                            );
+                            Alert.prompt("Confirm Password", "Enter your password to delete your account:", [
+                                { text: "Cancel", style: "cancel" },
+                                { text: "Delete", style: "destructive", onPress: (pwd) => pwd && handleDeleteAccount(pwd) }
+                            ], "secure-text");
                         } else {
-                            // 📱 Android Champion Logic: Show Custom Modal for Password Entry
                             setIsAndroidPasswordModalVisible(true);
                         }
                     }}
@@ -468,7 +371,7 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* 🛡️ Industrial Android Password Confirmation Modal */}
+            {/* Android Password Modal */}
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -481,18 +384,12 @@ export default function ProfileScreen() {
                             <Ionicons name="warning" size={32} color={activeColors.error} />
                             <Text style={[styles.modalTitle, { color: activeColors.text }]}>Confirm Password</Text>
                         </View>
-                        
                         <Text style={[styles.modalDescription, { color: activeColors.text }]}>
-                            Are you sure you want to permanently delete your account and everything with it? This action cannot be undone. To delete your account, please enter your password to confirm:
+                            Enter your password to permanently delete your account. This action cannot be undone.
                         </Text>
-
                         <View style={styles.inputContainer}>
                             <TextInput
-                                style={[styles.passwordInput, { 
-                                    backgroundColor: activeColors.background, 
-                                    color: activeColors.text,
-                                    borderColor: activeColors.border 
-                                }]}
+                                style={[styles.passwordInput, { backgroundColor: activeColors.background, color: activeColors.text, borderColor: activeColors.border }]}
                                 placeholder="Enter password"
                                 placeholderTextColor={activeColors.secondary}
                                 secureTextEntry
@@ -501,350 +398,61 @@ export default function ProfileScreen() {
                                 autoFocus
                             />
                         </View>
-
                         <View style={styles.modalButtons}>
-                            <TouchableOpacity 
-                                style={[styles.cancelBtn, { borderColor: activeColors.border }]} 
-                                onPress={() => {
-                                    setIsAndroidPasswordModalVisible(false);
-                                    setAndroidConfirmPassword("");
-                                }}
-                            >
+                            <TouchableOpacity style={[styles.cancelBtn, { borderColor: activeColors.border }]} onPress={() => {
+                                setIsAndroidPasswordModalVisible(false);
+                                setAndroidConfirmPassword("");
+                            }}>
                                 <Text style={[styles.cancelBtnText, { color: activeColors.text }]}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={[styles.deleteBtn, { backgroundColor: '#6366f1' }]} 
-                                onPress={() => handleDeleteAccount()}
-                                disabled={isDeleting}
-                            >
-                                <Text style={styles.deleteBtnText}>
-                                    {isDeleting ? "Deleting..." : "OK"}
-                                </Text>
+                            <TouchableOpacity style={[styles.deleteBtn, { backgroundColor: '#6366f1' }]} onPress={() => handleDeleteAccount()} disabled={isDeleting}>
+                                <Text style={styles.deleteBtnText}>{isDeleting ? "Deleting..." : "Delete"}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </Modal>
-
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    profileHeader: {
-        padding: 30,
-        alignItems: "center",
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-    },
-    headerRow: {
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        marginBottom: 15,
-    },
-    avatar: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 2.5,
-        ...Platform.select({
-            web: {
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-            },
-            default: {
-                elevation: 5,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 8,
-            }
-        })
-    },
-    logoutButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 8,
-        gap: 4,
-    },
-    logoutText: {
-        fontSize: 14,
-        fontWeight: "600",
-        marginLeft: 4,
-    },
-    avatarText: {
-        fontSize: 28,
-        fontWeight: "bold",
-    },
-    name: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
-    email: {
-        fontSize: 14,
-    },
-    card: {
-        margin: 20,
-        padding: 20,
-        borderRadius: 20,
-        borderWidth: 1.5,
-        ...Platform.select({
-            web: {
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-            },
-            default: {
-                elevation: 5,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 8,
-            }
-        })
-    },
-    cardTitle: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 12,
-    },
-    settingRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 10,
-    },
-    settingLabel: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    settingDescription: {
-        fontSize: 12,
-        marginTop: 3,
-    },
-    aboutText: {
-        fontSize: 14,
-        lineHeight: 20,
-        marginBottom: 15,
-    },
-    version: {
-        fontSize: 12,
-    },
-    disclaimerText: {
-        fontSize: 12,
-        fontStyle: "italic",
-        marginTop: 5,
-    },
-    deleteAccountButton: {
-        padding: 15,
-        borderRadius: 10,
-        alignItems: "center",
-        marginTop: 10,
-        borderWidth: 1.5,
-        ...Platform.select({
-            web: {
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-            },
-            default: {
-                elevation: 5,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 8,
-            }
-        })
-    },
-    deleteAccountText: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    timeContainer: {
-        marginTop: 15,
-        paddingTop: 15,
-        borderTopWidth: 1.5,
-    },
-    timeLabel: {
-        fontSize: 14,
-        fontWeight: "600",
-        marginBottom: 8,
-    },
-    timeInputRow: {
-        flexDirection: "row",
-        gap: 10,
-        marginBottom: 15,
-    },
-    timeInputContainer: {
-        flex: 1,
-    },
-    timeInputLabel: {
-        fontSize: 12,
-        marginBottom: 5,
-    },
-    timeInput: {
-        borderWidth: 1.5,
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-    },
-    saveButton: {
-        padding: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        borderWidth: 1.5,
-        ...Platform.select({
-            web: {
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            },
-            default: {
-                elevation: 5,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-            }
-        })
-    },
-    saveButtonText: {
-        fontSize: 14,
-        fontWeight: "600",
-    },
-    confirmBox: {
-        marginTop: 20,
-        paddingTop: 20,
-        borderTopWidth: 1.5,
-    },
-    confirmTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 12,
-    },
-    confirmText: {
-        fontSize: 13,
-        lineHeight: 18,
-        marginBottom: 15,
-    },
-    confirmButtons: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        gap: 12,
-    },
-    confirmButtonNo: {
-        flex: 1,
-        padding: 14,
-        borderRadius: 10,
-        alignItems: "center",
-        borderWidth: 1.5,
-        ...Platform.select({
-            web: {
-                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-            },
-            default: {
-                elevation: 5,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 5,
-            }
-        })
-    },
-    confirmButtonYes: {
-        flex: 1,
-        padding: 14,
-        borderRadius: 10,
-        alignItems: "center",
-        borderWidth: 1.5,
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-        ...Platform.select({
-            web: {
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            },
-            default: {
-                elevation: 5,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-            }
-        })
-    },
-    confirmButtonTextNo: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    confirmButtonTextYes: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    // --- 🛡️ INDUSTRIAL MODAL STYLES ---
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-    },
-    modalContent: {
-        width: "90%",
-        maxWidth: 400,
-        padding: 24,
-        borderRadius: 16,
-        borderWidth: 1.5,
-        elevation: 10,
-    },
-    modalHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 16,
-        gap: 12,
-    },
-    modalTitle: {
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    modalDescription: {
-        fontSize: 15,
-        lineHeight: 22,
-        marginBottom: 20,
-    },
-    inputContainer: {
-        marginBottom: 24,
-    },
-    passwordInput: {
-        padding: 14,
-        borderRadius: 12,
-        borderWidth: 1.5,
-        fontSize: 16,
-    },
-    modalButtons: {
-        flexDirection: "row",
-        gap: 12,
-        justifyContent: "flex-end",
-    },
-    cancelBtn: {
-        minWidth: 90,
-        padding: 12,
-        borderRadius: 30,
-        alignItems: "center",
-        borderWidth: 1.5,
-    },
-    cancelBtnText: {
-        fontSize: 15,
-        fontWeight: "600",
-    },
-    deleteBtn: {
-        minWidth: 90,
-        padding: 12,
-        borderRadius: 30,
-        alignItems: "center",
-    },
-    deleteBtnText: {
-        color: "#FFFFFF",
-        fontSize: 15,
-        fontWeight: "600",
-    },
+    container: { flex: 1 },
+    profileHeader: { padding: 30, alignItems: "center", borderBottomLeftRadius: 30, borderBottomRightRadius: 30 },
+    avatar: { width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", borderWidth: 2.5 },
+    avatarText: { fontSize: 28, fontWeight: "bold" },
+    name: { fontSize: 24, fontWeight: "bold", marginBottom: 5 },
+    email: { fontSize: 14 },
+    card: { margin: 20, padding: 20, borderRadius: 20, borderWidth: 1.5 },
+    cardTitle: { fontSize: 16, fontWeight: "600", marginBottom: 12 },
+    settingRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 10 },
+    settingLabel: { fontSize: 16, fontWeight: "600" },
+    settingDescription: { fontSize: 12, marginTop: 3 },
+    testButton: { padding: 12, borderRadius: 10, alignItems: "center", marginTop: 10 },
+    testButtonText: { fontSize: 14, fontWeight: "600" },
+    confirmBox: { marginTop: 20, paddingTop: 20, borderTopWidth: 1.5 },
+    confirmTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 12 },
+    confirmText: { fontSize: 13, lineHeight: 18, marginBottom: 15 },
+    confirmButtons: { flexDirection: "row", justifyContent: "space-between", gap: 12 },
+    confirmButtonNo: { flex: 1, padding: 14, borderRadius: 10, alignItems: "center", borderWidth: 1.5 },
+    confirmButtonYes: { flex: 1, padding: 14, borderRadius: 10, alignItems: "center", borderWidth: 1.5 },
+    confirmButtonTextNo: { fontSize: 16, fontWeight: "600" },
+    confirmButtonTextYes: { fontSize: 16, fontWeight: "600" },
+    aboutText: { fontSize: 14, lineHeight: 20, marginBottom: 15 },
+    version: { fontSize: 12 },
+    disclaimerText: { fontSize: 12, fontStyle: "italic", marginTop: 5 },
+    deleteAccountButton: { padding: 15, borderRadius: 10, alignItems: "center", marginTop: 10, borderWidth: 1.5 },
+    deleteAccountText: { fontSize: 16, fontWeight: "600" },
+    modalOverlay: { flex: 1, backgroundColor: "rgba(0, 0, 0, 0.7)", justifyContent: "center", alignItems: "center", padding: 20 },
+    modalContent: { width: "90%", maxWidth: 400, padding: 24, borderRadius: 16, borderWidth: 1.5, elevation: 10 },
+    modalHeader: { flexDirection: "row", alignItems: "center", marginBottom: 16, gap: 12 },
+    modalTitle: { fontSize: 20, fontWeight: "bold" },
+    modalDescription: { fontSize: 15, lineHeight: 22, marginBottom: 20 },
+    inputContainer: { marginBottom: 24 },
+    passwordInput: { padding: 14, borderRadius: 12, borderWidth: 1.5, fontSize: 16 },
+    modalButtons: { flexDirection: "row", gap: 12, justifyContent: "flex-end" },
+    cancelBtn: { minWidth: 90, padding: 12, borderRadius: 30, alignItems: "center", borderWidth: 1.5 },
+    cancelBtnText: { fontSize: 15, fontWeight: "600" },
+    deleteBtn: { minWidth: 90, padding: 12, borderRadius: 30, alignItems: "center" },
+    deleteBtnText: { color: "#FFFFFF", fontSize: 15, fontWeight: "600" },
 });

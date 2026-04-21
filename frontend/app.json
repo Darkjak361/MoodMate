@@ -12,8 +12,10 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSMicrophoneUsageDescription": "MoodMate needs access to your microphone to allow you to record your thoughts through voice.",
-        "NSSpeechRecognitionUsageDescription": "MoodMate needs speech recognition to convert your recorded thoughts into text."
-      }
+        "NSSpeechRecognitionUsageDescription": "MoodMate needs speech recognition to convert your recorded thoughts into text.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.suleman.moodmate"
     },
     "android": {
       "adaptiveIcon": {

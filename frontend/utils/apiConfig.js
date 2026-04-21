@@ -9,42 +9,24 @@ all of the users anytime, and all the time, as well. ADDITIONALLY, WE JUST ADDED
 
 // 💥 MASSIVE FIX: We completely abandon Expo's toxic environment variable caching.
 // This variable is now directly injected by our sync-ip.js script for 1,000,000% reliability.
-const TUNNEL_URL = "https://moodmate-backend-gyef.onrender.com";
+const TUNNEL_URL = "https://4535828dc2f8d0.lhr.life";
 const LOCAL_WEB = "http://127.0.0.1:5001/api";
 const PROD_API = "https://moodmate-backend-gyef.onrender.com/api";
 
 export const getApiUrl = () => {
   if (__DEV__) {
-    // 🏆 1,000,000% STABILITY: Prioritize direct Localhost for Web browsers
+    // Web browser: use localhost directly
     if (Platform.OS === "web" && typeof window !== "undefined") {
       const hostname = window.location.hostname;
       if (hostname === "localhost" || hostname === "127.0.0.1") {
-        console.log("📍 Web Mode: Using Direct Localhost API (Extreme Speed)");
+        console.log("📍 Web Mode: Using Direct Localhost API");
         return LOCAL_WEB;
       }
     }
 
-    // 📱 [Cloud-Bridge Mastery] for Android/iOS
-    // If we have an active tunnel, use it for cross-network connectivity.
-    const isCloud = TUNNEL_URL && (
-      TUNNEL_URL.includes("pgy.io") || 
-      TUNNEL_URL.includes("ngrok") || 
-      TUNNEL_URL.includes("lhr.life") || 
-      TUNNEL_URL.includes("localhost.run")
-    );
-
-    if (isCloud) {
-      console.log("🌍 Cloud Mode: Using Global Tunnel:", TUNNEL_URL);
-      return `${TUNNEL_URL}/api`;
-    }
-
-    // Fallback to whatever TUNNEL_URL is (even if it's a local IP)
-    if (TUNNEL_URL) {
-      console.log("🌐 Dev Mode: Using Current Bridge:", TUNNEL_URL);
-      return `${TUNNEL_URL}/api`;
-    }
-
-    return LOCAL_WEB;
+    // Android/iOS: always use the stable Render production backend
+    console.log("📱 Mobile Mode: Using Render Production Backend");
+    return PROD_API;
   }
 
   // Production Mode

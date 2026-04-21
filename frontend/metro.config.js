@@ -11,9 +11,8 @@ if (config.resolver) {
   const originalResolveRequest = config.resolver.resolveRequest;
   
   config.resolver.resolveRequest = (context, moduleName, platform) => {
-    // 🔥 The "Iron Curtain" Fix: 
-    // Redirect expo-notifications to a safe mock for Web AND Android (Expo Go SDK 53 fix).
-    if ((platform === 'web' || platform === 'android' || platform === 'ios') && moduleName === 'expo-notifications') {
+    // Redirect expo-notifications to a safe mock ONLY for Web to prevent SSR issues.
+    if (platform === 'web' && moduleName === 'expo-notifications') {
       return {
         type: 'sourceFile',
         filePath: mockPath,

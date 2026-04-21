@@ -27,6 +27,15 @@ if (Platform.OS !== "web" || typeof window !== "undefined") {
         shouldSetBadge: true,
       }),
     });
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: 5, // 5 = MAX Importance
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
   } catch (error) {
     console.warn("⚠️ [Notifications] Configuration skipped or failed (likely SSR environment)");
   }
