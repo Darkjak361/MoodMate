@@ -22,7 +22,7 @@ MoodMate has been successfully migrated to a **Full Cloud-Native Architecture**.
 *   **🛡️ Database**: High-availability cluster on **MongoDB Atlas** (AWS).
 
 > [!IMPORTANT]
-> **View the full [Master Deployment Guide](file:///c:/Users/Sulem/Desktop/Final_Capstone_Project_MoodMate/DEPLOYMENT.md) for detailed credentials and configuration instructions.**
+> **View the full [Master Deployment Guide](DEPLOYMENT.md) for detailed credentials and configuration instructions.**
 
 ---
 
@@ -82,6 +82,9 @@ To ensure **1,000,000% reliability** across **Windows, macOS, and Linux**, use t
 | Command | Purpose | Why it's 1,000,000% Better |
 | :--- | :--- | :--- |
 | `npm run setup` | **The "Great Sync"** | Installs everything and syncs IPs in one step. Workflows for all OS! ✅ |
+| `npm run build:apk` | **Android APK Build** | Generates a production-ready signed APK for Android devices. 🤖 |
+| `npm run build:ios` | **iOS Simulator Build**| Generates a build for the Mac iOS Simulator. 🍎 |
+| `npm run build:web` | **Production Web Export**| Exports a production-ready web version for Render hosting. 🌐 |
 | `npm run sdk:sync` | **The "Expo Shield"** | Checks and fixes Expo SDK versions for 100% Expo Go compatibility. 📱 |
 | `npm run update:all`| **The "System Refresh"**| Safely updates every industrial dependency across the entire stack. 🔄 |
 | `npm run clean:all` | **The "Nuclear Reset"** | Deletes all `node_modules` and performs a fresh, clean installation. 🛡️ |

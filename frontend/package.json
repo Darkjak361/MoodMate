@@ -20,7 +20,10 @@
     "victory": "node ./industrial-fix.js",
     "lint": "expo lint",
     "update:project": "npx expo install --check && npx expo install --fix",
-    "update:all": "npm update && npm install"
+    "update:all": "npm update && npm install",
+    "build:apk": "eas build -p android --profile MyDeploymentPreview",
+    "build:ios": "eas build -p ios --profile MyDeploymentPreview",
+    "build:web": "npx expo export"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
