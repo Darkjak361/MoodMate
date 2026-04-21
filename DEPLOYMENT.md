@@ -10,9 +10,9 @@ The system is split into three distinct cloud layers for maximum reliability:
 
 1.  **🚀 Backend Layer (Render)**: A live Node.js web service that handles API requests, authentication, and AI analysis.
 2.  **🛡️ Database Layer (MongoDB Atlas)**: A high-availability cloud cluster in AWS, secured by IP whitelisting.
-3.  **📱/🌐 Frontend Layer (EAS & Vercel)**:
+3.  **📱/🌐 Frontend Layer (EAS & Render)**:
     *   **Android**: A physical APK generated via Expo Application Services (EAS).
-    *   **Web**: A live React Native Web instance hosted on Vercel.
+    *   **Web**: A live React Native Web instance hosted on Render Static Sites.
 
 ---
 
@@ -43,7 +43,7 @@ To allow the cloud backend to talk to the database, the **Network Access** must 
 1.  Log in to [MongoDB Atlas](https://cloud.mongodb.com/).
 2.  Go to **Security > Network Access**.
 3.  Add IP Address: **`0.0.0.0/0`** (Allow Access from Anywhere).
-    *   *Note: This is required for Render/Vercel as they use dynamic IP ranges.*
+    *   *Note: This is required for Render as they use dynamic IP ranges.*
 4.  Verify the Database User (e.g., `suleman`) has **Read/Write** permissions.
 
 ---
@@ -61,20 +61,18 @@ eas build --platform android --profile preview
 
 ---
 
-## 🌐 5. Web Deployment (Vercel)
+## 🌐 5. Web Deployment (Render)
 
 The web version provides a professional browser experience for stakeholders who do not have an Android device.
 
-### 🛠️ Configuration Settings:
-1.  **Framework Preset**: Other (React Native Web / Expo)
-2.  **Root Directory**: `frontend`
-3.  **Build Command**: `npx expo export --platform web`
-4.  **Output Directory**: `dist`
+### 🛠️ Configuration Settings (Static Site):
+1.  **Build Command**: `npx expo export:web` (or `npx expo export`)
+2.  **Publish Directory**: `frontend/dist`
 
 ### 🏁 Deployment Steps:
-1.  Connect your GitHub repo to **Vercel**.
+1.  Connect your GitHub repo to **Render** as a Static Site.
 2.  Set the **Root Directory** to `frontend`.
-3.  Click **Deploy**. Vercel will automatically sync with every `git push`.
+3.  Click **Deploy**. Render will automatically sync with every `git push`.
 
 ---
 
@@ -92,8 +90,8 @@ To update both the Android and Web versions simultaneously, use this industrial 
     git push origin main
     ```
 3.  **Auto-Deploy**: 
-    *   **Web**: Vercel will automatically start a new build.
-    *   **Backend**: Render will automatically start a new deploy.
+    *   **Web**: Render will automatically start a new frontend build.
+    *   **Backend**: Render will automatically start a new backend deploy.
     *   **APK**: If major frontend changes were made, run `eas build` again to generate a new APK.
 
 ---

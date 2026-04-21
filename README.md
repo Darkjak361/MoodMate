@@ -17,7 +17,7 @@
 MoodMate has been successfully migrated to a **Full Cloud-Native Architecture**. It is now independent of the local machine and accessible globally:
 
 *   **📱 Android Version**: Deployed as a standalone APK via EAS (Expo Application Services).
-*   **🌐 Web Version**: Deployed as a live production instance on **Vercel**.
+*   **🌐 Web Version**: Deployed as a live production instance on **Render**.
 *   **🚀 Backend**: Live on **Render** (Oregon, US).
 *   **🛡️ Database**: High-availability cluster on **MongoDB Atlas** (AWS).
 

@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+dist/
+build/
+bin/
+obj/
+*.log
+.git/
+package-lock.json
