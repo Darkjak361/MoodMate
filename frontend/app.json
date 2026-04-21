@@ -28,6 +28,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.suleman.moodmate",
       "permissions": [
+        "RECORD_AUDIO",
         "RECORD_AUDIO"
       ]
     },
@@ -70,6 +71,12 @@
       "eas": {
         "projectId": "15a20187-d569-4e73-95d4-a31f28994bee"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/15a20187-d569-4e73-95d4-a31f28994bee"
     }
   }
 }
