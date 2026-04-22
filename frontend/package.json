@@ -3,27 +3,29 @@
   "main": "./index.js",
   "version": "1.0.0",
   "description": "1,000,000% Professional Cross-Platform Frontend for MoodMate (Capstone Final Submission)",
+  "author": "Ekroop Hundal-Vatcher & Suleman Ibrahim",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "expo start",
-    "start:clean": "npx expo start --clear",
+    "start": "./node_modules/.bin/expo start",
+    "start:clean": "./node_modules/.bin/expo start --clear",
     "tunnel": "node ./tunnel-bridge.js",
     "ports:clear": "npx kill-port 8081 4040",
     "tunnel:fix": "npx kill-port 8081 && npx rimraf .expo && node ./tunnel-bridge.js",
-    "tunnel:clean": "npx expo start --clear --tunnel",
+    "tunnel:clean": "./node_modules/.bin/expo start --clear --tunnel",
+    "tunnel:global": "./node_modules/.bin/expo start --tunnel --clear",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
+    "android": "./node_modules/.bin/expo start --android",
+    "ios": "./node_modules/.bin/expo start --ios",
+    "web": "./node_modules/.bin/expo start --web",
     "victory": "node ./industrial-fix.js",
-    "lint": "expo lint",
-    "update:project": "npx expo install --check && npx expo install --fix",
+    "lint": "./node_modules/.bin/expo lint",
+    "update:project": "./node_modules/.bin/expo install --check && ./node_modules/.bin/expo install --fix",
     "update:all": "npm update && npm install",
     "build:apk": "eas build -p android --profile MyDeploymentPreview",
     "build:ios": "eas build -p ios --profile MyDeploymentPreview",
-    "build:web": "npx expo export"
+    "build:web": "./node_modules/.bin/expo export"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -66,6 +68,7 @@
   "devDependencies": {
     "@expo/ngrok": "^4.1.3",
     "@types/react": "~19.1.0",
+    "@types/react-native": "^0.72.8",
     "baseline-browser-mapping": "^2.10.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",

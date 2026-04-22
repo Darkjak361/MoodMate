@@ -5,6 +5,7 @@ const net = require('net');
 
 // --- 🛡️⚓️🚀 MoodMate: Absolute One-Shot Victory Bridge ---
 // THE DEFINITIVE FIX: No more 503s. No more Network Errors. 100% Success.
+// Created by Ekroop Hundal-Vatcher & Suleman Ibrahim
 
 console.log('🌐 Starting MoodMate Absolute Victory Bridge...');
 
@@ -48,7 +49,7 @@ function startTunnel() {
 
 async function startExpoApp() {
     console.log('\n🚀 [Industrial Shield] Performing pre-flight checks...');
-    
+
     // Clear out old ports just in case
     const checkNgrok = spawn('npx', ['kill-port', '8081', '4040'], { shell: true });
     await new Promise(resolve => checkNgrok.on('close', resolve));
@@ -62,7 +63,7 @@ async function startExpoApp() {
     console.log('----------------------------------------------------\n');
 
     // EXPO START --CLEAR (but intentionally NOT --tunnel)
-    const expo = spawn('npx', ['expo', 'start', '--clear'], {
+    const expo = spawn('./node_modules/.bin/expo', ['start', '--clear'], {
         stdio: 'inherit',
         shell: true
     });

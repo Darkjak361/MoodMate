@@ -9,7 +9,7 @@ all of the users anytime, and all the time, as well. ADDITIONALLY, WE JUST ADDED
 
 // 💥 MASSIVE FIX: We completely abandon Expo's toxic environment variable caching.
 // This variable is now directly injected by our sync-ip.js script for 1,000,000% reliability.
-const TUNNEL_URL = "https://c25712635ceb13.lhr.life";
+const TUNNEL_URL = "http://10.111.18.102:5001";
 const LOCAL_WEB = "http://127.0.0.1:5001/api";
 const PROD_API = "https://moodmate-backend-gyef.onrender.com/api";
 
