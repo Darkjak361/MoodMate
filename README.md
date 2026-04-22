@@ -164,7 +164,7 @@ The command used to view the app on a physical phone before the APK was built.
 ## 📱 7. Mobile Deployment (iOS & Android - Expo Go) 🌟✨
 
 MoodMate is optimized to work **1,000% reliably** on real phones using the **Cloudflared Tunnel** architecture:
-1.  **Start the Tunnel**: Run `npm run tunnel` in the `frontend` folder.
+1.  **Start the Tunnel**: Run `npm run tunnel` or `npm run tunnel:global` in the `frontend` folder.
 2.  **Open Expo Go**: On your phone, open the **Expo Go** app.
 3.  **Scan the QR Code**: 
     *   **Android**: Scan directly with the Expo Go app.
