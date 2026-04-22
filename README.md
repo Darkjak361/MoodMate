@@ -131,6 +131,7 @@ To ensure the demo is **1,000,000% Flawless**, follow this exact sequence:
 1.  Open Terminal 2.
 2.  `cd frontend`
 3.  **`npm run tunnel`** 🚀
+            `OR`
 4.  **`npm run tunnel:global`** 🚀
 5.  **(Wait for the QR Code to appear! Localtunnel + Expo Tunnel will sync 100% automatically!)** ✅
 
