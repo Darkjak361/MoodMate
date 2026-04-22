@@ -54,16 +54,17 @@ async function startExpoApp() {
     const checkNgrok = spawn('npx', ['kill-port', '8081', '4040'], { shell: true });
     await new Promise(resolve => checkNgrok.on('close', resolve));
 
-    console.log('\n📱 Launching MoodMate (Wi-Fi Direct Edition)...');
+    console.log('\n📱 Launching MoodMate (Industrial Presentation Edition)...');
     console.log('----------------------------------------------------');
-    console.log('🌟 PRE-PRESENTATION ADVICE:');
-    console.log('   1. We have permanently disabled Localtunnel/Ngrok because of 503 errors.');
-    console.log('   2. The app is now using your direct computer Wi-Fi address (e.g. 10.x.x.x).');
-    console.log('   3. Make sure your Phone and Computer are on the SAME WI-FI network!');
+    console.log('🛡️ HUMBER COLLEGE SECURITY SHIELD DETECTED:');
+    console.log('   1. University Wi-Fi blocks direct phone-to-laptop connections.');
+    console.log('   2. FIX A: Use a MOBILE HOTSPOT (Laptop + Phone on Hotspot) = 1,000,000% SUCCESS.');
+    console.log('   3. FIX B: We have enabled EXPO TUNNEL below to bypass college blocks.');
+    console.log('   4. If the tunnel fails, run: npx ngrok config add-authtoken YOUR_TOKEN');
     console.log('----------------------------------------------------\n');
 
-    // EXPO START --CLEAR (but intentionally NOT --tunnel)
-    const expo = spawn('./node_modules/.bin/expo', ['start', '--clear'], {
+    // EXPO START --CLEAR --TUNNEL (The professional way to bypass university firewalls)
+    const expo = spawn('npx', ['expo', 'start', '--tunnel', '--clear'], {
         stdio: 'inherit',
         shell: true
     });
