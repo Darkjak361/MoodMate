@@ -11,7 +11,10 @@
     "setup": "npm run install:all && npm run ip:sync --prefix backend",
     "dev:all": "concurrently \"npm run dev --prefix backend\" \"npm run tunnel --prefix frontend\"",
     "sdk:sync": "npm run update:project --prefix frontend",
-    "lint:all": "npm run lint --prefix frontend"
+    "lint:all": "npm run lint --prefix frontend",
+    "build:apk": "npm run build:apk --prefix frontend",
+    "build:ios": "npm run build:ios --prefix frontend",
+    "build:web": "npm run build:web --prefix frontend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
